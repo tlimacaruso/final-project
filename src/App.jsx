@@ -9,8 +9,9 @@ import { Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import Home from './components/Home';
 import Profile from './components/Profile';
-import Sell from './components/Sell';
 import Register from './components/Register';
+import Sell from './components/Sell';
+import LogoutButton from './components/Logout';
 
 
 
@@ -40,10 +41,7 @@ function App() {
     return () => unsubscribe();
 }, []);
 
-  const handleLogout = () => {
-    signOut(auth);
-    useNavigate('/');
-  };
+
 
   return (
     <Router>
@@ -61,7 +59,7 @@ function App() {
             ) : (
               <>
               <li><Link to="/profile">Profile</Link></li>
-              <li><button onClick={handleLogout}>Logout</button></li>
+              <li><LogoutButton/></li>
               </>
             )}
           </ul>

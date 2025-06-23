@@ -112,13 +112,10 @@ function Sell() {
         }));
     };
 
-    const handlePreSizeChange = (e) => {
-        setPrevSize(e.target.value);
-        setSize('');
-    };
 
     const handleSizeChange = (e) => {
-        setSize(e.target.value)
+        setSelectedSize(e.target.value);
+        setItemData(prev=>({...prev, size: ''}));
     };
 
     const handleSubmit = async(e) => {

@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { getFirestore, collection, addDoc, Timestamp } from "firebase/firestore";
-import {app , db} from "../firebaseConfig";
-import './App.css';
-
-const db = getFirestore(app);
+import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
+import {db} from "../firebaseConfig";
+import '../App.css';
 
 function Sell() {
     const [itemData, setItemData] = useState({
@@ -51,47 +49,60 @@ function Sell() {
         .sort()
         .concat('Other');
 
-    const [uploading, setUploading] = useState(false);
 
-    async function handleFileChange(e) {
-        const file = e.target.files[0];
-        if (!file) return;
+    const handleImageUpload= async(e)=> {
+        const files = Array.from(e.target.files);
+        const uploadedImages =[];
 
-        setUploading(true);
-        const url = `https://api.cloudinary.com/v1_1/djlvpxr7a/upload`;
-        const formData = new FormData();
-        formData.append('file', file)
-        formData.append('upload_preset', 'reclothes-sell');
+        for (let file of files) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'reclothes-sell');
+            formData.append('folder', 'reclothes/app');
 
-        try {
-            const res = await fetch(url, {
+            const res = await fetch('https://api.cloudinary.com/v1_1/dz3qj4x2h/image/upload', {
                 method: 'POST',
-                body: formData
+                body: formData,
             });
 
             const data = await res.json();
-            setItemData(prev=> ({
-                ...prev,
-                images: [...prev.images, data.secure_url],
-            }));
-        } catch (error) {
-            console.error('Upload failed', error);
-        } finally {
-            setUploading(false);
+            uploadedImages.push(data.public_id);
         }
+
+        setItemData(prev=> ({...prev,images:uploadedImages}));
+        console.log('Uploaded image(s):', uploadedImages);
         
-    }
+    };
 
     function handleChange(e) {
         const { name, value } = e.target;
         setItemData(prev => ({ ...prev, [name]: value }));
     }
 
-    function handleSubmit(e) {
+    const handleSubmit = async(e) => {
         e.preventDefault();
 
-        
-    }
+        const finalCategory = secondSub ? `${category} > ${subCategory} > ${secondSub}`: subCategory ? `${category} > ${subCategory}`: category;
+
+        const itemToUpload ={
+            ...itemData,
+            category: finalCategory,
+            color: selectedColor,
+            timestamp: serverTimestamp(),
+        };
+
+        try {
+            await addDoc(collection(db, 'items'), itemToUpload);
+            alert('Item uploaded! Keep on shopping! :)');
+            //Reset formulario quando submeter
+        } catch (error){
+            console.error('Error adding piece:', error);
+            alert ('Error on the upload, please try again later :(');
+        }
+    
+    };
+
+    
 
     return (
         <div>
@@ -200,16 +211,23 @@ function Sell() {
 
                 <div>
                     <h3>Size</h3>
-                    {sizes.map((size) => (
-                        <button
-                            key={size}
-                            type='button'
-                            onClick={() => setItemData(prev => ({ ...prev, size }))}
-                            className={itemData.size === size ? 'selected' : ''}
-                        >
-                            {size}
-                        </button>
+                    {Object.keys(sizes).map((sizeCategory) => (
+                        <div key={sizeCategory}>
+                            {sizes[sizeCategory].map((size) => (
+                                <button
+                                key={size}
+                                type='button'
+                                onClick={() => setItemData(prev => ({ ...prev, size }))}
+                                className={itemData.size === size ? 'selected' : ''}
+                            >
+                                {size}
+                            </button>
+                            ))}
+                             
+                        </div>
+                       
                     ))}
+
                 </div>
 
                 <div>
@@ -229,13 +247,7 @@ function Sell() {
                 <div>
                     <h3>Let's see that beauty!</h3>
                     <p>Show us pictures of the item, so people can see what does it look like and how it fits 😊</p>
-                    <input type='file' onChange={handleFileChange}/>
-                    {uploading && <p>Uploading image...</p>}
-                    <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                        {itemData.images.map((image, index) => (
-                            <img key = {index} src = {image} alt = {`uploaded-${index}`} style={{ maxWidth: '150px' }}/>
-                        ))}
-                    </div>
+                    <input type='file' accept="image/*" multiple onChange={handleImageUpload}/>
                 </div>
             </form>
         </div>

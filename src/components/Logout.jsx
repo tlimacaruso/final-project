@@ -1,11 +1,11 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
-import {auth, db} from './firebaseConfig';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import {doc, getDoc} from 'firebase/firestore';
+import { useNavigate } from "react-router-dom";
+import {auth} from '../firebaseConfig';
+import { signOut } from 'firebase/auth';
 
  export default function LogoutButton() {
-    const navigate = useNavigate();
+
+  const navigate = useNavigate();
   
     const handleLogout = () => {
       signOut(auth).then(() => {

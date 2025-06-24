@@ -10,6 +10,7 @@ function Register(){
     const navigate = useNavigate();
     const [form, setForm] = useState({
         email: '',
+        displayName: '',
         password: '',
         confirmPassword: '',
         name: '',
@@ -34,6 +35,7 @@ function Register(){
 
             await setDoc(doc(db, 'users', user.uid),{
                 name: form.name,
+                displayName: form.displayName,
                 dateOfBirth: form.dateOfBirth,
                 email: form.email
             });
@@ -49,10 +51,13 @@ function Register(){
         <form onSubmit={handleRegister}>
             <h2 className="title-h2">Sign up</h2>
             <input type='text' name='name' placeholder='Name' onChange={handleChange} required />
+            <input type= 'text' name= 'displayName' placeholder='Username' onChange={handleChange} required/>
             <input type='date' name='dateOfBirth' onChange={handleChange} required />
             <input type='email' name='email' placeholder='E-mail' onChange={handleChange} required/>
             <input type='password' name='password' placeholder='Password' onChange={handleChange} required/>
             <input type='password' name='confirmPassword' placeholder='Confirm password' onChange={handleChange} required/>
+            <input type='file' accept="image/*" multiple onChange={handleImageUpload} />
+            {isLoadingImages && <p>Uploading images...</p>}
             <button type='submit'>Sign up</button>
         </form>
     );

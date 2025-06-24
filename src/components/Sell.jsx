@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
-import {db} from "../firebaseConfig";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db, auth } from "../firebaseConfig";
 import '../App.css';
 
 function Sell() {
@@ -10,7 +10,7 @@ function Sell() {
         price: '',
         condition: '',
         category: '',
-        color: '',
+        color: [],
         size: '',
         brand: '',
         images: [],
@@ -20,7 +20,8 @@ function Sell() {
     const [subCategory, setSubCategory] = useState('');
     const [secondSub, setSecondSub] = useState('');
     const [tempSelectedColor, setTempSelectedColor] = useState('');
-    const [selectedSize, setSelectedSize] = useState('');
+    const [selectedSizeCategory, setSelectedSizeCategory] = useState(''); 
+    const [isLoadingImages, setIsLoadingImages] = useState(false);
 
     const colors = [
         "Black", "White", "Gray", "Red", "Pink", "Orange", "Yellow", "Green",
@@ -51,9 +52,11 @@ function Sell() {
         .concat('Other');
 
 
-    const handleImageUpload= async(e)=> {
+
+    const handleImageUpload = async (e) => {
+        setIsLoadingImages(true); 
         const files = Array.from(e.target.files);
-        const uploadedImages =[];
+        const uploadedImages = [];
 
         for (let file of files) {
             const formData = new FormData();
@@ -61,18 +64,31 @@ function Sell() {
             formData.append('upload_preset', 'reclothes-sell');
             formData.append('folder', 'reclothes/app');
 
-            const res = await fetch('https://api.cloudinary.com/v1_1/dz3qj4x2h/image/upload', {
-                method: 'POST',
-                body: formData,
-            });
+            try {
+                // Cloud Name 'djlvpxr7a'
+                const res = await fetch('https://api.cloudinary.com/v1_1/djlvpxr7a/image/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
 
-            const data = await res.json();
-            uploadedImages.push(data.public_id);
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    throw new Error(`Cloudinary upload failed: ${res.status} ${res.statusText} - ${errorText}`);
+                }
+
+                const data = await res.json();
+                uploadedImages.push(data.public_id);
+            } catch (error) {
+                console.error('Error uploading image to Cloudinary:', error);
+                alert('Error uploading image. Please try again.');
+                setIsLoadingImages(false); 
+                return; 
+            }
         }
-
-        setItemData(prev=> ({...prev,images:uploadedImages}));
-        console.log('Uploaded image(s):', uploadedImages);
         
+        setItemData(prev => ({ ...prev, images: uploadedImages }));
+        setIsLoadingImages(false);
+        console.log('Uploaded image(s):', uploadedImages);
     };
 
     function handleChange(e) {
@@ -96,51 +112,67 @@ function Sell() {
     };
 
     const handleAddColor = () => {
-        if (tempSelectedColor && itemData.color.length < 3 && !itemData.color.includes(tempSelectedColor)){
-            setItemData(prev=>({
+        if (tempSelectedColor && itemData.color.length < 3 && !itemData.color.includes(tempSelectedColor)) {
+            setItemData(prev => ({
                 ...prev,
                 color: [...prev.color, tempSelectedColor]
             }));
-            tempSelectedColor('');
+            setTempSelectedColor('');
         };
     };
 
     const handleRemoveColor = (colorToRemove) => {
-        setItemData(prev=> ({
+        setItemData(prev => ({
             ...prev,
-            color: prev.color.filter(color=>color !== colorToRemove)
+            color: prev.color.filter(color => color !== colorToRemove)
         }));
     };
 
-
-    const handleSizeChange = (e) => {
-        setSelectedSize(e.target.value);
-        setItemData(prev=>({...prev, size: ''}));
+    const handleSizeCategoryChange = (e) => {
+        setSelectedSizeCategory(e.target.value);
+        setItemData(prev => ({ ...prev, size: '' }));
     };
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const finalCategory = secondSub ? `${category} > ${subCategory} > ${secondSub}`: subCategory ? `${category} > ${subCategory}`: category;
+        const user = auth.currentUser;
 
-        const itemToUpload ={
+        if (!user) {
+            alert('You must be logged in to sell an item');
+            return;
+        }
+
+        
+        if (isLoadingImages) {
+            alert('Please wait for images to finish uploading.');
+            return;
+        }
+        if (itemData.images.length === 0) {
+            alert('Please upload at least one image.');
+            return;
+        }
+
+        const finalCategory = secondSub ? `${category} > ${subCategory} > ${secondSub}` : subCategory ? `${category} > ${subCategory}` : category;
+
+        const itemToUpload = {
             ...itemData,
             category: finalCategory,
-            color: selectedColor,
             timestamp: serverTimestamp(),
+            userId: user.uid,
+            userName: user.displayName,
         };
 
         try {
             await addDoc(collection(db, 'items'), itemToUpload);
             alert('Item uploaded! Keep on shopping! :)');
-            //Reset formulario quando submeter
             setItemData({
                 name: '',
                 description: '',
                 price: '',
                 condition: '',
-                category: '', // O itemData.category pode ser limpo, pois ele é construído no handleSubmit
-                color: '',
+                category: '',
+                color: [],
                 size: '',
                 brand: '',
                 images: [],
@@ -148,12 +180,13 @@ function Sell() {
             setCategory('');
             setSubCategory('');
             setSecondSub('');
+            setTempSelectedColor('');
+            setSelectedSizeCategory(''); 
 
-        } catch (error){
+        } catch (error) {
             console.error('Error adding piece:', error);
-            alert ('Error on the upload, please try again later :(');
+            alert('Error on the upload, please try again later :(');
         }
-    
     };
 
     const currentSubCategories = catMenu[category];
@@ -161,13 +194,10 @@ function Sell() {
         ? currentSubCategories[subCategory]
         : [];
 
-    const currentSizes = sizes[selectedSize] || [];
+    const currentSizes = sizes[selectedSizeCategory] || []; 
 
-    
 
     return (
-
-        //dropdown!!!!!
         <div>
             <div className="title-h2">Upload item</div>
             <p>Welcome to the selling page! Upload your clothing items describing them in a few easy steps!</p>
@@ -196,7 +226,7 @@ function Sell() {
                         <option value='newTags'>New with tags</option>
                         <option value='newNoTags'>New without tags</option>
                         <option value='great'>Great</option>
-                        <option value ='good'>Good</option>
+                        <option value='good'>Good</option>
                         <option value='okay'>Okay</option>
                     </select>
                 </div>
@@ -207,35 +237,35 @@ function Sell() {
                         <label htmlFor='mainCategory'>Main Type</label>
                         <select id='mainCategory' value={category} onChange={handleCategoryChange} required>
                             <option value=''>Select a type:</option>
-                            {Option.keys(catMenu).map((cat) => (
+                            {Object.keys(catMenu).map((cat) => (
                                 <option key={cat} value={cat}>{cat}</option>
                             ))}
-                        </select>     
+                        </select>
                     </div>
 
                     {category && currentSubCategories && (
                         <div>
-                        <label htmlFor='subCategory'>Subtype</label>
-                        <select id='subCategory' value={subCategory} onChange={handleSubCategoryChange} required>
-                            <option value=''>Select a subtype:</option>
-                            {Array.isArray (currentSubCategories) ? (
-                                currentSubCategories.map((subcat) => (
+                            <label htmlFor='subCategory'>Subtype</label>
+                            <select id='subCategory' value={subCategory} onChange={handleSubCategoryChange} required>
+                                <option value=''>Select a subtype:</option>
+                                {Array.isArray(currentSubCategories) ? (
+                                    currentSubCategories.map((subcat) => (
+                                        <option key={subcat} value={subcat}>{subcat}</option>
+                                    ))
+                                ) : (Object.keys(currentSubCategories).map((subcat) => (
                                     <option key={subcat} value={subcat}>{subcat}</option>
                                 ))
-                            ) : ( Object.keys(currentSubCategories).map((subcat) => (
-                                <option key={subcat} value={subcat}>{subcat}</option>
-                            ))
-                            )}
-                        </select>
-                    </div>
+                                )}
+                            </select>
+                        </div>
                     )}
 
-                    {subCategory && currentSecondSubCategories && currentSecondSubCategories.length>0 && (
+                    {subCategory && currentSecondSubCategories && currentSecondSubCategories.length > 0 && (
                         <div>
                             <label htmlFor='secondSub'>Subtype</label>
                             <select id='secondSub' value={secondSub} onChange={handleSecondSubChange} required>
                                 <option value=''>Select a subtype:</option>
-                                {currentSecondSubCategories.map((secsub)=>(
+                                {currentSecondSubCategories.map((secsub) => (
                                     <option key={secsub} value={secsub}>{secsub}</option>
                                 ))}
                             </select>
@@ -246,13 +276,13 @@ function Sell() {
                 <div>
                     <h3>Color or predominant color:</h3>
                     <p>Choose up to 3</p>
-                    <select 
-                    value = {tempSelectedColor}
-                    onChange={(e)=>setTempSelectedColor(e.target.value)}
-                    disabled = {itemData.color.length >=3}
+                    <select
+                        value={tempSelectedColor}
+                        onChange={(e) => setTempSelectedColor(e.target.value)}
+                        disabled={itemData.color.length >= 3}
                     >
                         <option value=''>Select a color to add</option>
-                        {colors.filter(color=>!itemData.color.includes(color)).map((color)=>(
+                        {colors.filter(color => !itemData.color.includes(color)).map((color) => (
                             <option key={color} value={color}>{color}</option>
                         ))}
                     </select>
@@ -260,7 +290,7 @@ function Sell() {
                         Add colors
                     </button>
 
-                    <div style={{marginTop: '10px'}}>
+                    <div style={{ marginTop: '10px' }}>
                         {itemData.color.map((color) => (
                             <span key={color} style={{
                                 backgroundColor: '#f0f0f0',
@@ -270,39 +300,36 @@ function Sell() {
                                 borderRadius: '5px',
                                 display: 'inline-block',
                                 cursor: 'pointer'
-                            }} onClick={()=>handleRemoveColor(color)}>
+                            }} onClick={() => handleRemoveColor(color)}>
                                 {color} &times;
-
                             </span>
                         ))}
                     </div>
-                    {itemData.color.length === 0 && <p style={{color: 'red'}}>Add at least one color</p>}
+                    {itemData.color.length === 0 && <p style={{ color: 'red' }}>Add at least one color</p>}
                 </div>
 
                 <div>
                     <h3>Size</h3>
                     <div>
                         <label htmlFor='size'>Size Group</label>
-                        <select id='size' value={selectedSize} onChange={handleSizeChange} required>
+                        <select id='size' value={selectedSizeCategory} onChange={handleSizeCategoryChange} required>
                             <option value=''>Adults or kids?</option>
-                            {Option.keys(sizes).map((size) => (
+                            {Object.keys(sizes).map((size) => (
                                 <option key={size} value={size}>{size}</option>
                             ))}
                         </select>
-                        {selectedSize && (
+                        {selectedSizeCategory && (
                             <div>
                                 <label htmlFor="specificSize">Size</label>
-                                <select id='specificSize' value={specificSize} onChange={handleChange} required>
+                                <select id='specificSize' name='size' value={itemData.size} onChange={handleChange} required>
                                     <option value=''>Select a size</option>
                                     {currentSizes.map((size) => (
-                                            <option key={size} value={size}>{size}</option>
-                                        ))}
+                                        <option key={size} value={size}>{size}</option>
+                                    ))}
                                 </select>
                             </div>
-                        )}   
+                        )}
                     </div>
-
-                   
                 </div>
 
                 <div>
@@ -318,8 +345,13 @@ function Sell() {
                 <div>
                     <h3>Let's see that beauty!</h3>
                     <p>Show us pictures of the item, so people can see what does it look like and how it fits 😊</p>
-                    <input type='file' accept="image/*" multiple onChange={handleImageUpload}/>
+                    <input type='file' accept="image/*" multiple onChange={handleImageUpload} />
+                    {isLoadingImages && <p>Uploading images...</p>}
                 </div>
+
+                <button type='submit' disabled={isLoadingImages || itemData.images.length === 0}>
+                    {isLoadingImages ? 'Uploading...' : 'Upload Item'}
+                </button>
             </form>
         </div>
     );

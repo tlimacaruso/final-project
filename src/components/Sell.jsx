@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, getDoc, doc } from "firebase/firestore";
 import { db, auth } from "../firebaseConfig";
 import '../App.css';
 
@@ -136,7 +136,7 @@ function Sell() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const user = auth.currentUser;
+        const user = auth.currentUser; //ele não vai dar o username
 
         if (!user) {
             alert('You must be logged in to sell an item');
@@ -155,12 +155,14 @@ function Sell() {
 
         const finalCategory = secondSub ? `${category} > ${subCategory} > ${secondSub}` : subCategory ? `${category} > ${subCategory}` : category;
 
+        const completeUser = await getDoc(doc(db, 'users', user.uid));
+
         const itemToUpload = {
             ...itemData,
             category: finalCategory,
             timestamp: serverTimestamp(),
             userId: user.uid,
-            userName: user.displayName,
+            userName: completeUser.data().displayName,
         };
 
         try {

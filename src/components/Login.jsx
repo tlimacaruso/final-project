@@ -18,6 +18,8 @@ function Login(){
         }
     };
 
+    //ver se user esta logado!!!!! - força lo a dizer que está logado - route guard (nas rotas)
+
     return(
        <>
        <h5>Login to start!</h5>

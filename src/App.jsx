@@ -1,10 +1,10 @@
 import './App.css'
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link, Navigate} from 'react-router-dom';
 import {auth, db} from './firebaseConfig';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import {doc, getDoc} from 'firebase/firestore';
-import { Navigate } from 'react-router-dom';
+
 
 import Login from './components/Login';
 import Home from './components/Home';
@@ -12,8 +12,7 @@ import Profile from './components/Profile';
 import Register from './components/Register';
 import Sell from './components/Sell';
 import LogoutButton from './components/Logout';
-
-
+import 
 
 function App() {
   const [user, setUser] =useState(null);
@@ -44,6 +43,7 @@ function App() {
 
 
   return (
+    
     <Router>
       <div className="NavBar">
         <nav>
@@ -70,7 +70,8 @@ function App() {
           <Route path="/login" element={<Login />}/>
           <Route path="/register" element={<Register/>}/>
           <Route path="/profile" element={user ? <Profile /> : <Navigate to='/login'/>}/>
-          <Route path="sell" element={user ? <Sell /> : <Navigate to='/login'/>}/>
+          <Route path="/sell" element={user ? <Sell /> : <Navigate to='/login'/>}/>
+          <Route path ="/profile/:userId" element={<Profile />} />
 
         </Routes>
       </div>

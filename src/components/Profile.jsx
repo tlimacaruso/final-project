@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db } from '../firebaseConfig';
 import { doc, getDoc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { updateProfile } from 'firebase/auth';
 import { Link } from 'react-router-dom';
 
@@ -13,6 +13,7 @@ function Profile() {
         displayName: '',
         dateOfBirth: '',
         email: '',
+        profilePicture: '',
     });
 
     const [userItems, setUserItems] = useState([]);
@@ -20,51 +21,63 @@ function Profile() {
 
     const navigate = useNavigate();
 
+    const { userId } = useParams(); // Get userId from URL params if needed
+    const [myProfile, setMyProfile] = useState(false);
+
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
-            const userDocRef = doc(db, 'users', currentUser.uid);
+
+        if (userId && userId !== auth.currentUser?.uid) {
+            fetchUserData(userId);
+            
+        }else{
+            const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
+                if (!currentUser) {
+                    navigate('/login');
+                };
+                fetchUserData(currentUser.uid);
+                
+            });
+            return () => unsubscribe();
+        }
+    
+    }, [navigate]);
+
+    const fetchUserData = async (userId) => {
+        const userDocRef = doc(db, 'users', userId);
             const userSnap = await getDoc(userDocRef);
-            if (currentUser) {
+            let profileData = userSnap.data();
+            if (userSnap.exists()) {
+                profileData = userSnap.data();
+            } /* else {
+                profileData = {
+                    email: currentUser.email,
+                    displayName: currentUser.displayName || '',
+                    createdAt: new Date(),
+                    name: '',
+                    dateOfBirth: '',
+                    profilePicture: '',
+                };
+                await setDoc(userDocRef, profileData, { merge: true });
+            } */
+            
+            if (profileData) {
 
-                if (userSnap.exists()) {
-                    const data = userSnap.data();
                     setUserData({
-                        ...data,
-                        displayName: currentUser.displayName || data.displayName || '',
-                        email: currentUser.email || data.email || ''
+                        ...profileData
                     });
                     setForm({
-                        name: data.name || '',
-                        displayName: currentUser.displayName || data.displayName || '',
-                        dateOfBirth: data.dateOfBirth || '',
-                        email: data.email || ''
+                        name: profileData.name || '',
+                        displayName: profileData.displayName || '',
+                        dateOfBirth: profileData.dateOfBirth || '',
+                        email: profileData.email || '',
+                        profilePicture: profileData.profilePicture || '',
                     });
-                }
-                else {
-                    setUserData({
-                        name: '',
-                        displayName: currentUser.displayName || '',
-                        dateOfBirth: '',
-                        email: currentUser.email || '',
-                    });
-                    setForm({
-                        name: '',
-                        displayName: currentUser.displayName || '',
-                        dateOfBirth: '',
-                        email: currentUser.email || '',
-                    });
-                    await updateDoc(userDocRef, {
-                        email: currentUser.email,
-                        displayName: currentUser.displayName || '',
-                        createdAt: new Date(),
-                    }, { merge: true });
-                }
 
-                const fetchUserItems = async () => {
+                const fetchUserItems = async (userId) => {
                     try {
                         setLoadingItems(true);
                         const itemsRef = collection(db, 'items');
-                        const q = query(itemsRef, where('userId', '==', currentUser.uid));
+                        const q = query(itemsRef, where('userId', '==', userId));
                         const querySnapshot = await getDocs(q);
                         const itemsData = querySnapshot.docs.map(doc => ({
                             id: doc.id,
@@ -78,15 +91,12 @@ function Profile() {
                     }
                 };
 
-                fetchUserItems();
+                fetchUserItems(userId);
 
             } else {
                 navigate('/login');
             }
-        });
-
-        return () => unsubscribe();
-    }, [navigate]);
+    }
 
 
 
@@ -109,7 +119,8 @@ function Profile() {
                 })
                 setUserData({
                     ...form,
-                    email: currentUser.email
+                    email: currentUser.email,
+                    profilePicture: userData.profilePicture,
                 });
                 setIsEditing(false);
                 alert('Profile updated successfully');
@@ -125,6 +136,24 @@ function Profile() {
     return (
         <div>
             <h2 className="title-h2">Profile</h2>
+
+            <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+                {userData.profilePicture ? (
+                    <img src={userData.profilePicture} 
+                    alt='Profile picture' 
+                    style={{
+                        borderRadius: '50%',
+                        width: '100px',
+                        height: '100px',
+                        objectFit: 'cover'
+                    }}
+                    />
+                ) : (
+                    <img src='https://via.placeholder.com/100' alt='Default Profile' width='100' style={{ borderRadius: '50%' }}/>
+                )}
+
+                <button onClick={() => navigate('/upload-profile-picture')}>Change Photo</button> 
+            </div>
 
             {isEditing ? (
                 <div>

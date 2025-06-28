@@ -5,8 +5,6 @@ import { Link } from "react-router-dom";
 
 function Home(){
 
-    //FALTA DISTINÇÃO DE LOGADO OU NÃO
-
     const [items, setItems] = useState([]);
 
     useEffect(() => {

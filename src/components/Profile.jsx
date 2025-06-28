@@ -14,94 +14,121 @@ function Profile() {
         dateOfBirth: '',
         email: '',
         profilePicture: '',
+        bio: '',
     });
 
     const [userItems, setUserItems] = useState([]);
     const [loadingItems, setLoadingItems] = useState(true);
+    const [authLoading, setAuthLoading] = useState(true);
+    const [uploadingImage, setUploadingImage] = useState(false);
 
     const navigate = useNavigate();
 
-    const { userId } = useParams(); // Get userId from URL params if needed
-    const [myProfile, setMyProfile] = useState(false);
+    const { userId: profileUserId } = useParams();
 
     useEffect(() => {
 
-        if (userId && userId !== auth.currentUser?.uid) {
-            fetchUserData(userId);
+        /* if (userId && userId !== auth.currentUser?.uid) {
+             fetchUserData(userId);
             
-        }else{
-            const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
-                if (!currentUser) {
-                    navigate('/login');
-                };
-                fetchUserData(currentUser.uid);
-                
-            });
-            return () => unsubscribe();
-        }
-    
-    }, [navigate]);
+         }else{ */
+        const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
+            if (currentUser) {
+                const targetUserId = profileUserId && profileUserId !== currentUser.uid
+                ? profileUserId
+                : currentUser.uid;
 
-    const fetchUserData = async (userId) => {
-        const userDocRef = doc(db, 'users', userId);
-            const userSnap = await getDoc(userDocRef);
-            let profileData = userSnap.data();
-            if (userSnap.exists()) {
-                profileData = userSnap.data();
-            } /* else {
-                profileData = {
-                    email: currentUser.email,
-                    displayName: currentUser.displayName || '',
-                    createdAt: new Date(),
-                    name: '',
-                    dateOfBirth: '',
-                    profilePicture: '',
-                };
-                await setDoc(userDocRef, profileData, { merge: true });
-            } */
-            
-            if (profileData) {
-
-                    setUserData({
-                        ...profileData
-                    });
-                    setForm({
-                        name: profileData.name || '',
-                        displayName: profileData.displayName || '',
-                        dateOfBirth: profileData.dateOfBirth || '',
-                        email: profileData.email || '',
-                        profilePicture: profileData.profilePicture || '',
-                    });
-
-                const fetchUserItems = async (userId) => {
-                    try {
-                        setLoadingItems(true);
-                        const itemsRef = collection(db, 'items');
-                        const q = query(itemsRef, where('userId', '==', userId));
-                        const querySnapshot = await getDocs(q);
-                        const itemsData = querySnapshot.docs.map(doc => ({
-                            id: doc.id,
-                            ...doc.data()
-                        }));
-                        setUserItems(itemsData);
-                    } catch (error) {
-                        console.error('Error fetching user items: ? ', error);
-                    } finally {
-                        setLoadingItems(false);
-                    }
-                };
-
-                fetchUserItems(userId);
-
+            await fetchUserData(targetUserId);
+            setAuthLoading(false);
             } else {
                 navigate('/login');
             }
-    }
+            });
 
 
+        return () => unsubscribe();
+    }, [navigate, profileUserId]);
+
+    const fetchUserData = async (userId) => {
+        try {
+            const userDocRef = doc(db, 'users', userId);
+            const userSnap = await getDoc(userDocRef);
+
+            if (!userSnap.exists()) {
+                navigate('/login');
+                return;
+            }
+
+            const profileData = userSnap.data();
+
+
+            setUserData(profileData);
+            setForm({
+                name: profileData.name || '',
+                displayName: profileData.displayName || '',
+                dateOfBirth: profileData.dateOfBirth || '',
+                email: profileData.email || '',
+                profilePicture: profileData.profilePicture || '',
+                bio: profileData.bio || '',
+            });
+
+            await fetchUserItems(userId);
+
+        } catch (error) {
+            console.error('Error fetching user data: ', error);
+        }
+    };
+
+    const fetchUserItems = async (userId) => {
+        try {
+            setLoadingItems(true);
+            const itemsRef = collection(db, 'items');
+            const q = query(itemsRef, where('userId', '==', userId));
+            const querySnapshot = await getDocs(q);
+            const itemsData = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setUserItems(itemsData);
+        } catch (error) {
+            console.error('Error fetching user items: ', error);
+        } finally {
+            setLoadingItems(false);
+        }
+    };
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'reclothes-sell');
+
+        try{
+            setUploadingImage(true);
+            const res = await fetch('https://api.cloudinary.com/v1_1/djlvpxr7a/image/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await res.json();
+            if (data.secure_url) {
+                setForm((prevForm) => ({ 
+                    ...prevForm, 
+                    profilePicture: data.secure_url,
+                }));
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            alert('Image upload failed. Please try again.');
+        } finally {
+            setUploadingImage(false);
+        }
     };
 
     const handleSave = async () => {
@@ -116,11 +143,12 @@ function Profile() {
                     name: form.name,
                     displayName: form.displayName,
                     dateOfBirth: form.dateOfBirth,
+                    bio: form.bio,
+                    profilePicture: form.profilePicture,
                 })
                 setUserData({
                     ...form,
                     email: currentUser.email,
-                    profilePicture: userData.profilePicture,
                 });
                 setIsEditing(false);
                 alert('Profile updated successfully');
@@ -133,26 +161,32 @@ function Profile() {
 
     if (!userData) return <p>Loading...</p>
 
+
     return (
         <div>
             <h2 className="title-h2">Profile</h2>
 
             <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-                {userData.profilePicture ? (
-                    <img src={userData.profilePicture} 
-                    alt='Profile picture' 
-                    style={{
-                        borderRadius: '50%',
-                        width: '100px',
-                        height: '100px',
-                        objectFit: 'cover'
-                    }}
+                    <img src={userData.profilePicture || 'https://via.placeholder.com/100'}
+                        alt='Profile picture'
+                        style={{
+                            borderRadius: '50%',
+                            width: '100px',
+                            height: '100px',
+                            objectFit: 'cover'
+                        }}
                     />
-                ) : (
-                    <img src='https://via.placeholder.com/100' alt='Default Profile' width='100' style={{ borderRadius: '50%' }}/>
-                )}
-
-                <button onClick={() => navigate('/upload-profile-picture')}>Change Photo</button> 
+                    {isEditing && (
+                        <div style={{ marginTop: '10px' }}>
+                            <input
+                                type='file'
+                                accept='image/*'
+                                onChange={handleImageUpload}
+                                style={{ display: 'block', margin: '10px auto' }}
+                            />
+                            {uploadingImage && <p>Uploading profile picture...</p>}
+                        </div>
+                    )}
             </div>
 
             {isEditing ? (
@@ -172,16 +206,29 @@ function Profile() {
                         <input type='date' name='dateOfBirth' value={form.dateOfBirth} onChange={handleChange} />
                     </label>
 
+                    <label>
+                        Bio:
+                        <textarea
+                            name='bio'
+                            value={form.bio}
+                            onChange={handleChange}
+                            placeholder='Bio (optional)'
+                            rows='4'
+                            cols='50'
+                        ></textarea>
+                    </label>
+
                     <br />
                     <button onClick={handleSave}>Save</button>
                     <button onClick={() => setIsEditing(false)}>Cancel</button>
                 </div>
             ) : (
                 <div>
-                    <p><strong>Username:</strong>{userData.displayName || 'Undefined'}</p>
-                    <p><strong>Name:</strong>{userData.name}</p>
-                    <p><strong>Email:</strong>{userData.email}</p>
-                    <p><strong>Date of birth:</strong>{userData.dateOfBirth}</p>
+                    <p><strong>{userData.displayName || 'Undefined'}</strong></p>
+                    <p>{userData.name}</p>
+                    <p>{userData.bio}</p>
+                    {/* <p><strong>Email:</strong>{userData.email}</p>
+                    <p><strong>Date of birth:</strong>{userData.dateOfBirth}</p> */}
                     <button onClick={() => setIsEditing(true)}>Edit profile</button>
                 </div>
             )}

@@ -12,7 +12,7 @@ import Profile from './components/Profile';
 import Register from './components/Register';
 import Sell from './components/Sell';
 import LogoutButton from './components/Logout';
-import 
+import Details from './components/Details';
 
 function App() {
   const [user, setUser] =useState(null);
@@ -72,6 +72,7 @@ function App() {
           <Route path="/profile" element={user ? <Profile /> : <Navigate to='/login'/>}/>
           <Route path="/sell" element={user ? <Sell /> : <Navigate to='/login'/>}/>
           <Route path ="/profile/:userId" element={<Profile />} />
+          <Route path="/details/:id" element={<Details />} />
 
         </Routes>
       </div>

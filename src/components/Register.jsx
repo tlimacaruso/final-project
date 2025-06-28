@@ -15,6 +15,7 @@ function Register(){
         name: '',
         dateOfBirth: '',
         profilePicture: '',
+        bio: ''
     });
     
     const [isLoadingImage, setIsLoadingImage] = useState(false);
@@ -111,6 +112,7 @@ function Register(){
             <input type='email' name='email' placeholder='E-mail' onChange={handleChange} required/>
             <input type='password' name='password' placeholder='Password' onChange={handleChange} required/>
             <input type='password' name='confirmPassword' placeholder='Confirm password' onChange={handleChange} required/>
+            <textarea type='text' name='bio' placeholder='Bio (optional)' onChange={handleChange} rows='4' cols='50'></textarea>
             
             <div>
                 <label htmlFor='profilePicture'>Profile Picture:</label>

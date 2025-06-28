@@ -207,6 +207,16 @@ function Profile() {
                     </label>
 
                     <label>
+                        Password:
+                        <input type='password' name='password' value={form.password} placeholder='New password' onChange={handleChange} />
+                    </label>
+
+                    <label>
+                        Confirm password:
+                        <input type='password' name='password' value={form.confirmPassword} placeholder='Confirm new password' onChange={handleChange} />
+                    </label>
+
+                    <label>
                         Bio:
                         <textarea
                             name='bio'
@@ -229,7 +239,8 @@ function Profile() {
                     <p>{userData.bio}</p>
                     {/* <p><strong>Email:</strong>{userData.email}</p>
                     <p><strong>Date of birth:</strong>{userData.dateOfBirth}</p> */}
-                    <button onClick={() => setIsEditing(true)}>Edit profile</button>
+                    {(!profileUserId || profileUserId === auth.currentUser?.uid) && (
+                        <button onClick={() => setIsEditing(true)}>Edit profile</button>)}
                 </div>
             )}
 

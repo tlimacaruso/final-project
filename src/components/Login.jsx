@@ -3,22 +3,31 @@ import {auth} from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
+
 function Login(){
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
 
     const handleLogin = async(e)=>{
         e.preventDefault();
+        setEmailError('');
+        setPasswordError('');
         try{
             await signInWithEmailAndPassword(auth,email,password);
             navigate('/');
         } catch (error){
+            if (error.code === 'auth/invalid-email') {
+                setEmailError('Oops! Wrong email!');
+              } else if (error.code === 'auth/wrong-password') {
+                setPasswordError('Oops! Wrong password!');
+              } else {
             alert('Error: ' + error.message);
+            }
         }
     };
-
-    //ver se user esta logado!!!!! - força lo a dizer que está logado - route guard (nas rotas)
 
     return(
        <>

@@ -4,6 +4,7 @@ import { doc, getDoc, updateDoc, collection, query, where, getDocs } from 'fireb
 import { useNavigate, useParams } from 'react-router-dom';
 import { updateProfile } from 'firebase/auth';
 import { Link } from 'react-router-dom';
+import ItemCard from './ItemCard';
 
 function Profile() {
     const [userData, setUserData] = useState(null);
@@ -249,13 +250,14 @@ function Profile() {
                 ? (
                     <p>Loading closet...</p>
                 ) : (
-                    <div>
+                    <div className='items-grid'>
                         {userItems.length === 0 ? (
                             <p>Your closet is empty 🙃</p>
                         ) : (
                             <div>
                                 {userItems.map(item => (
-                                    <div key={item.id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
+                                    <ItemCard key={item.id} item={item}/>
+                                   /*  <div key={item.id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
                                         <h4>{item.name}</h4>
                                         <p>{item.description}</p>
                                         <p>Price: € {item.price}</p>
@@ -269,8 +271,7 @@ function Profile() {
                                         ))}
                                         <Link to={`/details/${item.id}`}>Details</Link>
 
-                                        {/* DIFERENÇA ENTRE EDIT E COMPRAR O DE OUTRA PESSOA */}
-                                    </div>
+                                    </div> */
                                 ))}
                             </div>
                         )}

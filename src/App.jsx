@@ -1,6 +1,6 @@
 import './App.css'
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { useAuth } from './components/AuthContext';
 import {auth, db} from './firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -14,6 +14,7 @@ import Register from './components/Register';
 import Sell from './components/Sell';
 import LogoutButton from './components/Logout';
 import Details from './components/Details';
+import Logo from '../public/img/reclotheslogo.png';
 
 
 
@@ -23,9 +24,6 @@ function App() {
 
   const PrivateRoute = ({ children }) => {
     const { currentUser, loadingAuth } = useAuth();
-    if (loadingAuth) {
-      return <p>Loading...</p>;
-    }
     return currentUser ? children : <Navigate to="/login" replace />;
   };
 
@@ -64,7 +62,10 @@ function App() {
     <Router>
       <div className="NavBar">
         <nav>
-          <ul style={{ display: 'flex', gap: '1rem', listStyle: 'none' }}>
+          <Link to='/' className='navbar-logo'>
+            <img src={Logo} alt='Logo'/>
+          </Link>
+          <ul>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/sell">Sell</Link></li>
 

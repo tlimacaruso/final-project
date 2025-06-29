@@ -1,121 +1,145 @@
-/* Reset básico */
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    min-height: 100vh;
-  }
-  
-  /* Navbar */
-  .NavBar nav {
-    background-color: #ffffff;
-    border-bottom: 1px solid #ddd;
-    padding: 10px 20px;
-  }
-  
-  .NavBar ul {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    list-style: none;
-    gap: 1rem;
-  }
-  
-  .NavBar a,
-  .NavBar button {
-    text-decoration: none;
-    color: #007bff;
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 6px 12px;
-  }
-  
-  .NavBar a:hover,
-  .NavBar button:hover {
-    text-decoration: underline;
-  }
-  
-  /* Container principal */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto Flex', sans-serif;
+  background-color: white;
+  color: black;
+  min-height: 100vh;
+  font-weight: 300;
+}
+
+/* Navbar */
+.NavBar nav {
+  background-color: #ff7b2a; /* branco com toque laranja bem suave */
+  padding: 12px 24px;
+}
+
+.navbar-logo img {
+  height: 100px; 
+  width: auto;
+  margin-right: 20px; 
+}
+
+.NavBar ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  gap: 2.5rem;
+  font-family: 'Roboto Flex', sans-serif;
+  font-weight: 900;
+}
+
+.NavBar a,
+.NavBar button {
+  text-decoration: none;
+  color: #fff8f0;
+  background: none;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 30px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.15s ease;
+  box-shadow: 0 2px 5px rgba(255, 111, 0, 0.25);
+}
+
+.NavBar a:hover,
+.NavBar button:hover {
+  background-color: #00ff66;
+  color: #fff;
+  transform: scale(1.1);
+  text-decoration: none;
+}
+
+.itemCard{
+  width: 300px;
+}
+
+/* Títulos */
+h1, h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  font-weight: 700;
+  color: #e65100; /* laranja forte */
+  letter-spacing: 1px;
+}
+
+/* Formulários */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid #ffb74d;
+  font-size: 16px;
+  font-weight: 500;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: #ff6f00;
+  box-shadow: 0 0 8px #ff6f00;
+  background-color: #fff8f0;
+}
+
+/* Botões */
+button[type="submit"],
+button.logout {
+  background-color: #ff6f00;
+  color: white;
+  font-weight: 700;
+  border: none;
+  padding: 14px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 18px;
+  box-shadow: 0 4px 10px rgba(255, 111, 0, 0.3);
+  transition: background-color 0.3s ease, transform 0.15s ease;
+}
+
+button[type="submit"]:hover,
+button.logout:hover {
+  background-color: #ff8f00;
+  transform: scale(1.05);
+}
+
+.selected {
+  background-color: #e65100;
+  color: white;
+  border: 2px solid #bf360c;
+  box-shadow: 0 0 12px #bf360c;
+}
+
+/* Perfil ou mensagens */
+.profile-info, .message {
+  margin-top: 28px;
+  text-align: center;
+  font-weight: 600;
+  color: #bf360c;
+  font-size: 18px;
+}
+
+/* Responsivo simples */
+@media (max-width: 500px) {
   .container {
-    max-width: 420px;
-    margin: 40px auto;
+    margin: 20px;
     padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
   }
-  
-  /* Títulos */
-  h1, h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  /* Formulários */
-  form {
-    display: flex;
+
+  .NavBar ul {
     flex-direction: column;
     gap: 12px;
   }
-  
-  input {
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-  }
-  
-  input:focus {
-    outline: none;
-    border-color: #007bff;
-  }
-  
-  /* Botões */
-  button[type="submit"],
-  button.logout {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-    border: none;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  button[type="submit"]:hover,
-  button.logout:hover {
-    background-color: #0056b3;
-  }
-
-  .selected {
-    background-color: #333;
-    color: white;
-    border: 2px solid black;
-  }
-  
-  /* Perfil ou mensagens */
-  .profile-info, .message {
-    margin-top: 20px;
-    text-align: center;
-  }
-  
-  /* Responsivo simples */
-  @media (max-width: 500px) {
-    .container {
-      margin: 20px;
-      padding: 15px;
-    }
-  
-    .NavBar ul {
-      flex-direction: column;
-      gap: 8px;
-    }
-  }
-  
+}

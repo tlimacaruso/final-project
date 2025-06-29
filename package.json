@@ -19,10 +19,12 @@
     "@mui/material": "^7.1.2",
     "@mui/styled-engine-sc": "^7.1.1",
     "axios": "^1.10.0",
+    "components": "^0.1.0",
     "firebase": "^11.9.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
+    "styled": "^1.0.0",
     "styled-components": "^6.1.19"
   },
   "devDependencies": {

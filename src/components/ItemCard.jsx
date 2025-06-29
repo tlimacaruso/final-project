@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { auth, db } from "../firebaseConfig";
 import { collection, getDocs } from 'firebase/firestore';
 import { Link } from "react-router-dom";
+import WishlistButton from "./WishlistButton";
 
 function ItemCard({ item }) {
 
@@ -60,8 +61,12 @@ function ItemCard({ item }) {
                             <p>Posted by: Unknown</p>
                         )}
                         {/*  <Link to={`/details/${item.id}`}>Details</Link> */}
+
                     </div>
                 </Link>
+                <WishlistButton 
+                            itemId={item.id} 
+                            itemOwnerId={item.userId}/>
             </div>
         </div>
     );

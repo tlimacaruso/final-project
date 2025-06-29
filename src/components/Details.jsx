@@ -4,8 +4,8 @@ import { doc, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import '../App.css';
-import { name } from "@cloudinary/url-gen/actions/namedTransformation";
-import { color } from "@cloudinary/url-gen/qualifiers/background";
+import WishlistButton from "./WishlistButton";
+import WishlistPage from "./Wishlistpage";
 
 function Details() {
     const { id } = useParams();

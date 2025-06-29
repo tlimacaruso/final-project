@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { auth } from '../firebaseConfig';
+import { useAuth } from './AuthContext';
+import { Heart } from 'lucide-react';
+import { getUserWishlist, addToWishlist, removeFromWishlist } from '../services/wishlistService';
+
 
 const WishlistButton = ({ itemId, itemOwnerId }) => {
     const [isWishlisted, setIsWishlisted] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
@@ -34,12 +39,21 @@ const WishlistButton = ({ itemId, itemOwnerId }) => {
             return;
         }
 
-        if (isWishlisted) {
+        setLoading(true);
+
+        try {
+            if (isWishlisted) {
                 await removeFromWishlist(currentUser.uid, itemId);
             } else {
-                await addProductToWishlist(currentUser.uid, itemId);
+                await addToWishlist(currentUser.uid, itemId);
             }
             setIsWishlisted(!isWishlisted);
+        } catch (error) {
+            console.error("Error toggling wishlist:", error);
+            alert("Error updating wishlist. Please try again.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (!currentUser || currentUser.uid === itemOwnerId) {
@@ -48,19 +62,22 @@ const WishlistButton = ({ itemId, itemOwnerId }) => {
 
     return (
         <button onClick={handleWishlistToggle}
-        style={{
-            backgroundColor: 'transparent',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: '24px',
-            color: isWishlisted ? 'black' : 'gray',
-        }}>
+            disabled={loading}
+            style={{
+                backgroundColor: 'transparent',
+                border: 'none',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                fontSize: '24px',
+                opacity: loading ? 0.5 : 1,
+                color: isWishlisted ? 'red' : 'gray',
+            }}
+            title={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}>
             {isWishlisted ? '♥︎' : '♡'}
         </button>
     );
+
 };
 
 export default WishlistButton;
-
 
 

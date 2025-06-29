@@ -1,10 +1,12 @@
 import './App.css'
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
 import { useAuth } from './components/AuthContext';
 import {auth, db} from './firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 import {doc, getDoc} from 'firebase/firestore';
+import { Heart } from 'lucide-react';
+
 
 
 import Login from './components/Login';
@@ -14,16 +16,21 @@ import Register from './components/Register';
 import Sell from './components/Sell';
 import LogoutButton from './components/Logout';
 import Details from './components/Details';
+import WishlistPage from './components/Wishlistpage';
+import WishlistButton from './components/WishlistButton';
 import Logo from '../public/img/reclotheslogo.png';
+import WishlistNavBar from './components/WishlistNavBar';
 
 
 
 function App() {
 
-  const { currentUser, loadingAuth } = useAuth();
-
   const PrivateRoute = ({ children }) => {
     const { currentUser, loadingAuth } = useAuth();
+
+    if (loadingAuth) {
+      return <p>Loading authentication...</p>;
+    }
     return currentUser ? children : <Navigate to="/login" replace />;
   };
 
@@ -33,9 +40,6 @@ function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-      if (loadingAuth) {
-        return <p>Loading...</p>;
-      }
 
       if (currentUser) {
 
@@ -55,6 +59,7 @@ function App() {
     return () => unsubscribe();
   }, []);
 
+  const { currentUser } = useAuth();
 
 
   return (
@@ -63,7 +68,7 @@ function App() {
       <div className="NavBar">
         <nav>
           <Link to='/' className='navbar-logo'>
-            <img src={Logo} alt='Logo'/>
+            <img src={Logo} alt='Logo' style={{height: '100px'}}/>
           </Link>
           <ul>
             <li><Link to="/">Home</Link></li>
@@ -81,6 +86,12 @@ function App() {
               </>
             )}
           </ul>
+
+          <div>
+          {currentUser && (
+              <li><WishlistNavBar className='wishButton'/></li>
+            )}
+          </div>
         </nav>
 
         <Routes>
@@ -97,12 +108,23 @@ function App() {
           />
           <Route path="/profile/:userId"
             element={<Profile />}/>
+
           <Route path="/sell" element= {
             <PrivateRoute>
                 <Sell />
-              </PrivateRoute>} />
+              </PrivateRoute>}/>
+
           <Route path="/profile/:userId" element={<Profile />} />
           <Route path="/details/:id" element={<Details />} />
+
+          <Route
+            path="/wishlist"
+            element={
+              <PrivateRoute>
+                <WishlistPage />
+              </PrivateRoute>
+            }
+          />
 
         </Routes>
       </div>

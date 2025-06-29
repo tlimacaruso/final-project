@@ -1,4 +1,3 @@
-
 * {
   margin: 0;
   padding: 0;
@@ -14,17 +13,14 @@ body {
 }
 
 .NavBar nav {
-  background-color: #ff7b2a; /* branco com toque laranja bem suave */
-  padding: 12px 24px;
+  background-color: #ff7b2a;
+  padding: 0;
 }
 
 .navbar-logo img {
   height: 100px; 
   width: auto;
   margin-left: 20px; 
-  display: flex;
-  flex-direction: row;
-  align-items: center;
 }
 
 .NavBar ul {
@@ -55,94 +51,8 @@ body {
 
 .NavBar a:hover,
 .NavBar button:hover {
-  background-color: #00ff66;
+  background-color: #ff005d;
   color: #fff;
   transform: scale(1.1);
   text-decoration: none;
-}
-
-.itemCard{
-  width: 300px;
-}
-
-/* Títulos */
-h1, h2 {
-  text-align: center;
-  margin-bottom: 24px;
-  font-weight: 700;
-  color: #e65100; /* laranja forte */
-  letter-spacing: 1px;
-}
-
-/* Formulários */
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-input {
-  padding: 12px;
-  border-radius: 8px;
-  border: 2px solid #ffb74d;
-  font-size: 16px;
-  font-weight: 500;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-input:focus {
-  outline: none;
-  border-color: #ff6f00;
-  box-shadow: 0 0 8px #ff6f00;
-  background-color: #fff8f0;
-}
-
-/* Botões */
-button[type="submit"],
-button.logout {
-  background-color: #ff6f00;
-  color: white;
-  font-weight: 700;
-  border: none;
-  padding: 14px;
-  border-radius: 30px;
-  cursor: pointer;
-  font-size: 18px;
-  box-shadow: 0 4px 10px rgba(255, 111, 0, 0.3);
-  transition: background-color 0.3s ease, transform 0.15s ease;
-}
-
-button[type="submit"]:hover,
-button.logout:hover {
-  background-color: #ff8f00;
-  transform: scale(1.05);
-}
-
-.selected {
-  background-color: #e65100;
-  color: white;
-  border: 2px solid #bf360c;
-  box-shadow: 0 0 12px #bf360c;
-}
-
-/* Perfil ou mensagens */
-.profile-info, .message {
-  margin-top: 28px;
-  text-align: center;
-  font-weight: 600;
-  color: #bf360c;
-  font-size: 18px;
-}
-
-/* Responsivo simples */
-@media (max-width: 500px) {
-  .container {
-    margin: 20px;
-    padding: 20px;
-  }
-
-  .NavBar ul {
-    flex-direction: column;
-    gap: 12px;
-  }
 }

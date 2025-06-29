@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { addProductToWishlist, removeFromWishlist, getUserWishlist } from './WishlistService';
 import { auth } from '../firebaseConfig';
 
 const WishlistButton = ({ itemId, itemOwnerId }) => {

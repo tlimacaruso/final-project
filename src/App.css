@@ -13,7 +13,6 @@ body {
   font-weight: 300;
 }
 
-/* Navbar */
 .NavBar nav {
   background-color: #ff7b2a; /* branco com toque laranja bem suave */
   padding: 12px 24px;
@@ -22,11 +21,15 @@ body {
 .navbar-logo img {
   height: 100px; 
   width: auto;
-  margin-right: 20px; 
+  margin-left: 20px; 
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .NavBar ul {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   list-style: none;

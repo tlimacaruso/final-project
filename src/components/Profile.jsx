@@ -29,22 +29,18 @@ function Profile() {
 
     useEffect(() => {
 
-        /* if (userId && userId !== auth.currentUser?.uid) {
-             fetchUserData(userId);
-            
-         }else{ */
         const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
             if (currentUser) {
                 const targetUserId = profileUserId && profileUserId !== currentUser.uid
-                ? profileUserId
-                : currentUser.uid;
+                    ? profileUserId
+                    : currentUser.uid;
 
-            await fetchUserData(targetUserId);
-            setAuthLoading(false);
+                await fetchUserData(targetUserId);
+                setAuthLoading(false);
             } else {
                 navigate('/login');
             }
-            });
+        });
 
 
         return () => unsubscribe();
@@ -110,7 +106,7 @@ function Profile() {
         formData.append('file', file);
         formData.append('upload_preset', 'reclothes-sell');
 
-        try{
+        try {
             setUploadingImage(true);
             const res = await fetch('https://api.cloudinary.com/v1_1/djlvpxr7a/image/upload', {
                 method: 'POST',
@@ -119,8 +115,8 @@ function Profile() {
 
             const data = await res.json();
             if (data.secure_url) {
-                setForm((prevForm) => ({ 
-                    ...prevForm, 
+                setForm((prevForm) => ({
+                    ...prevForm,
                     profilePicture: data.secure_url,
                 }));
             }
@@ -162,32 +158,36 @@ function Profile() {
 
     if (!userData) return <p>Loading...</p>
 
+    const availableItems = userItems.filter(item => !item.isSold);
+    const soldItems = userItems.filter(item => item.isSold);
+    const isOwnProfile = (!profileUserId || profileUserId === auth.currentUser?.uid);
+
 
     return (
         <div>
             <h2 className="title-h2">Profile</h2>
 
             <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-                    <img src={userData.profilePicture || 'https://via.placeholder.com/100'}
-                        alt='Profile picture'
-                        style={{
-                            borderRadius: '50%',
-                            width: '100px',
-                            height: '100px',
-                            objectFit: 'cover'
-                        }}
-                    />
-                    {isEditing && (
-                        <div style={{ marginTop: '10px' }}>
-                            <input
-                                type='file'
-                                accept='image/*'
-                                onChange={handleImageUpload}
-                                style={{ display: 'block', margin: '10px auto' }}
-                            />
-                            {uploadingImage && <p>Uploading profile picture...</p>}
-                        </div>
-                    )}
+                <img src={userData.profilePicture || 'https://via.placeholder.com/100'}
+                    alt='Profile picture'
+                    style={{
+                        borderRadius: '50%',
+                        width: '100px',
+                        height: '100px',
+                        objectFit: 'cover'
+                    }}
+                />
+                {isEditing && (
+                    <div style={{ marginTop: '10px' }}>
+                        <input
+                            type='file'
+                            accept='image/*'
+                            onChange={handleImageUpload}
+                            style={{ display: 'block', margin: '10px auto' }}
+                        />
+                        {uploadingImage && <p>Uploading profile picture...</p>}
+                    </div>
+                )}
             </div>
 
             {isEditing ? (
@@ -254,25 +254,37 @@ function Profile() {
                         {userItems.length === 0 ? (
                             <p>Your closet is empty 🙃</p>
                         ) : (
-                            <div>
-                                {userItems.map(item => (
-                                    <ItemCard key={item.id} item={item}/>
-                                   /*  <div key={item.id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
-                                        <h4>{item.name}</h4>
-                                        <p>{item.description}</p>
-                                        <p>Price: € {item.price}</p>
-                                        <p>Condition: {item.condition}</p>
-                                        <p>Category: {item.category}</p>
-                                        <p>Color: {item.color.join(', ')}</p>
-                                        <p>Size: {item.size}</p>
-                                        <p>Brand:{item.brand}</p>
-                                        {item.images && item.images.map((img, i) => (
-                                            <img key={i} src={`https://res.cloudinary.com/djlvpxr7a/image/upload/w_200,h_200,c_fill/${img}`} alt={`Item ${item.name}`} width='200' style={{ marginRight: '10px' }} />
-                                        ))}
-                                        <Link to={`/details/${item.id}`}>Details</Link>
 
-                                    </div> */
-                                ))}
+                            <div className='items-grid'>
+                                {userItems.filter(item => !item.isSold).length === 0 ? (
+                                    <p>No items currently for sale.</p>
+                                ) : (
+                                    <div>
+                                        {userItems.filter(item => !item.isSold).map(item => (
+                                            <ItemCard key={item.id} item={item} />
+                                        ))}
+                                    </div>
+                                )}
+
+                                {isOwnProfile && (
+                                    <>
+                                        <h2 className='title-h2'>Sold Items</h2>
+                                        {loadingItems ? (
+                                            <p>Loading sold items...</p>
+                                        ) : (
+                                            <div className='items-grid'>
+                                                {soldItems.length === 0 ? (
+                                                    <p>No items have been sold yet.</p>
+                                                ) : (
+                                                    soldItems.map(item => (
+                                                        <ItemCard key={item.id} item={item} showSoldTag={true} />
+                                                    ))
+                                                )}
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+
                             </div>
                         )}
                     </div>

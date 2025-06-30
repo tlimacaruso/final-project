@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from "react";
-import {auth,db} from "../firebaseConfig";
-import {collection, getDocs} from 'firebase/firestore';
-import { Link } from "react-router-dom";
+import {db} from "../firebaseConfig";
+import {collection, getDocs, query, where, or} from 'firebase/firestore';
 import ItemCard from "./ItemCard";
 
 function Home(){
@@ -19,7 +18,8 @@ function Home(){
                     id: doc.id,
                     ...doc.data()
                 }));
-                setItems(data);
+                const availableItems = data.filter(item => !item.isSold);
+                setItems(availableItems);
             } catch (error) {
                 console.error('Error loading items: ', error);
                 setError('Impossible to load items');

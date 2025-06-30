@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { auth, db } from "../firebaseConfig";
-import { collection, getDocs } from 'firebase/firestore';
+import React from "react";
 import { Link } from "react-router-dom";
 import WishlistButton from "./WishlistButton";
+import { Heart } from "lucide-react";
 
-function ItemCard({ item }) {
+function ItemCard({ item, showSoldTag }) {
 
     /* const [items, setItems] = useState([]);
 
@@ -60,7 +59,8 @@ function ItemCard({ item }) {
                         ) : (
                             <p>Posted by: Unknown</p>
                         )}
-                        {/*  <Link to={`/details/${item.id}`}>Details</Link> */}
+                        
+                        {showSoldTag && <p style={{ color: 'red', fontWeight: 'bold' }}>SOLD</p>}
 
                     </div>
                 </Link>

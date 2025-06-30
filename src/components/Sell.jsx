@@ -40,7 +40,7 @@ function Sell() {
     };
 
     const sizes = {
-        'Adults': ['XS', 'S', 'M', 'L', 'XL', 'XXL', '32', '34', '36', '38', '40', '42', '44'],
+        'Adults': ['XS', 'S', 'M', 'L', 'XL', 'XXL', '32', '34', '36', '38', '40', '42', '44', '36', '37', '38', '39', '40', '41', '42', '43', '44'],
         'Children': ['0-3 months', '3-6 months', '6-9 months', '9-12 months', '12-18 months', '1 year', '2-3 years', '4-5 years', '6-7 years', '8-9 years', '10-11 years', '12-13 years', '14-15 years']
     }
 
@@ -136,7 +136,7 @@ function Sell() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const user = auth.currentUser; //ele não vai dar o username
+        const user = auth.currentUser;
 
         if (!user) {
             alert('You must be logged in to sell an item');
@@ -163,6 +163,7 @@ function Sell() {
             timestamp: serverTimestamp(),
             userId: user.uid,
             userName: completeUser.data().displayName,
+            isSold: false,
         };
 
         try {

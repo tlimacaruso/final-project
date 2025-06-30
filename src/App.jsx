@@ -2,9 +2,9 @@ import './App.css'
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
 import { useAuth } from './components/AuthContext';
-import {auth, db} from './firebaseConfig';
+import { auth, db } from './firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
-import {doc, getDoc} from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { Heart } from 'lucide-react';
 
 
@@ -17,9 +17,11 @@ import Sell from './components/Sell';
 import LogoutButton from './components/Logout';
 import Details from './components/Details';
 import WishlistPage from './components/Wishlistpage';
-import WishlistButton from './components/WishlistButton';
 import Logo from '../public/img/reclotheslogo.png';
 import WishlistNavBar from './components/WishlistNavBar';
+import CheckoutPage from './components/CheckoutPage';
+import SearchBar from './components/SearchBar';
+import Footer from './components/Footer';
 
 
 
@@ -68,7 +70,7 @@ function App() {
       <div className="NavBar">
         <nav>
           <Link to='/' className='navbar-logo'>
-            <img src={Logo} alt='Logo' style={{height: '100px'}}/>
+            <img src={Logo} alt='Logo' style={{ height: '100px' }} />
           </Link>
           <ul>
             <li><Link to="/">Home</Link></li>
@@ -86,47 +88,52 @@ function App() {
               </>
             )}
           </ul>
-
-          <div>
-          {currentUser && (
-              <li><WishlistNavBar className='wishButton'/></li>
-            )}
-          </div>
+          <ul>
+            <li><SearchBar /></li>
+            <li>
+              {currentUser && (
+                <li><WishlistNavBar className='wishButton' /></li>
+              )}
+            </li>
+          </ul>
         </nav>
+        <main className='main-content'>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+            {/* Private routes */}
+            <Route path="/profile"
+              element={
+                <PrivateRoute>
+                  <Profile />
+                </PrivateRoute>}
+            />
+            <Route path="/profile/:userId"
+              element={<Profile />} />
 
-          {/* Private routes */}
-          <Route path="/profile"
-            element={
+            <Route path="/sell" element={
               <PrivateRoute>
-                <Profile />
-              </PrivateRoute>}
-          />
-          <Route path="/profile/:userId"
-            element={<Profile />}/>
-
-          <Route path="/sell" element= {
-            <PrivateRoute>
                 <Sell />
-              </PrivateRoute>}/>
+              </PrivateRoute>} />
 
-          <Route path="/profile/:userId" element={<Profile />} />
-          <Route path="/details/:id" element={<Details />} />
+            <Route path="/profile/:userId" element={<Profile />} />
+            <Route path="/details/:id" element={<Details />} />
+            <Route path="/checkout/:id" element={<CheckoutPage />} />
 
-          <Route
-            path="/wishlist"
-            element={
-              <PrivateRoute>
-                <WishlistPage />
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/wishlist"
+              element={
+                <PrivateRoute>
+                  <WishlistPage />
+                </PrivateRoute>
+              }
+            />
 
-        </Routes>
+          </Routes>
+        </main>
+        <Footer />
       </div>
     </Router>
   )

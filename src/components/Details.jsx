@@ -5,13 +5,12 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import '../App.css';
 import WishlistButton from "./WishlistButton";
-import WishlistPage from "./Wishlistpage";
 
 function Details() {
     const { id } = useParams();
     const [item, setItem] = useState(null);
     const [isOwner, setIsOwner] = useState(false);
-    const[isEditing, setIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
     const [form, setForm] = useState({});
     const navigate = useNavigate();
 
@@ -21,7 +20,7 @@ function Details() {
             const itemSnap = await getDoc(itemDocRef);
 
             if (itemSnap.exists()) {
-                setItem(itemSnap.data());
+                setItem({ ...itemSnap.data(), id: itemSnap.id });
 
                 if (auth.currentUser && itemSnap.data().userId === auth.currentUser.uid) {
                     setIsOwner(true);
@@ -47,7 +46,7 @@ function Details() {
         const files = e.target.files;
         const uploadedImages = [];
 
-        for (let i=0; i < files.length; i++) {
+        for (let i = 0; i < files.length; i++) {
             const formData = new FormData();
             formData.append('file', files[i]);
             formData.append('upload_preset', 'reclothes-sell');
@@ -62,8 +61,8 @@ function Details() {
             }
         }
 
-        setForm(prev => ({ 
-            ...prev, 
+        setForm(prev => ({
+            ...prev,
             images: [...(prev.images || []), ...uploadedImages],
         }));
     };
@@ -71,7 +70,8 @@ function Details() {
     const handleRemoveImage = (imageIdToRemove) => {
         setForm(prev => ({
             ...prev,
-            images: prev.images.filter(imageId => imageId !== imageIdToRemove),}));
+            images: prev.images.filter(imageId => imageId !== imageIdToRemove),
+        }));
     };
 
     const handleChange = (e) => {
@@ -93,7 +93,7 @@ function Details() {
                 brand: form.brand,
                 images: form.images || [],
             });
-            setItem({...form});
+            setItem({ ...form });
             setForm({});
             setIsEditing(false);
             console.log("Item updated successfully");
@@ -141,7 +141,7 @@ function Details() {
                     <input type="text" name="brand" value={form.brand || item.brand} onChange={handleChange} placeholder="Brand" />
 
                     <div>
-                        <label>Images: 
+                        <label>Images:
                             <input type="file" multiple onChange={handleImageUpload} />
                         </label>
                         <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '10px' }}>
@@ -165,7 +165,7 @@ function Details() {
                                             borderRadius: '50%',
                                             cursor: 'pointer'
                                         }}
-                                        >x</button>
+                                    >x</button>
                                 </div>
                             ))}
 
@@ -189,6 +189,20 @@ function Details() {
                         <img key={idx} src={`https://res.cloudinary.com/djlvpxr7a/image/upload/w_200,h_200,c_fill/${imgId}`} alt={`Item ${item.name}`} width='200' style={{ marginRight: '10px' }} />
                     ))}
                     <p>Posted by: <Link to={`/profile/${item.userId}`}><strong>{item.userName}</strong></Link></p>
+
+                    {auth.currentUser && auth.currentUser.uid !== item.userId && (
+                        <button
+                            onClick={() => navigate(`/checkout/${item.id}`)}
+                            style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+                        >Buy this item
+                        </button>
+                    )}
+
+                    {auth.currentUser && auth.currentUser.uid !== item.userId && (
+                        <div style={{ marginTop: '10px' }}>
+                            <WishlistButton itemId={item.id} />
+                        </div>
+                    )}
 
                     {isOwner && (
                         <div style={{ marginTop: '20px' }}>

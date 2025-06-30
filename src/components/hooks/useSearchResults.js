@@ -22,6 +22,9 @@ const useSearchResults = (searchTerm) => {
             if (username.includes(searchTermLower) || email.includes(searchTermLower)) {
                 userResults.push({
                     id: doc.id,
+                    type: 'user', 
+                    name: userData.username, 
+                    description: userData.email, 
                     ...userData
                 });
             }
@@ -37,60 +40,66 @@ const useSearchResults = (searchTerm) => {
         const searchTermLower = term.toLowerCase();
     
         itemsSnapshot.forEach((doc) => {
-          const itemData = doc.data();
-          const title = itemData.title?.toLowerCase() || '';
-          const brand = itemData.brand?.toLowerCase() || '';
-          const description = itemData.description?.toLowerCase() || '';
-          
-          if (title.includes(searchTermLower) || 
-              brand.includes(searchTermLower) || 
-              description.includes(searchTermLower)) {
-            itemResults.push({
-              id: doc.id,
-              ...itemData
-            });
-          }
+            const itemData = doc.data();
+            const title = itemData.title?.toLowerCase() || '';
+            const brand = itemData.brand?.toLowerCase() || '';
+            const description = itemData.description?.toLowerCase() || '';
+            
+            if (title.includes(searchTermLower) || 
+                brand.includes(searchTermLower) || 
+                description.includes(searchTermLower)) {
+                itemResults.push({
+                    id: doc.id,
+                    type: 'item',
+                    name: itemData.title,
+                    title: itemData.title,
+                    ...itemData
+                });
+            }
         });
     
         return itemResults;
-      };
+    };
 
-      const performSearch = async (term) => {
+    const performSearch = async (term) => {
         if (!term?.trim()) {
-          setUsers([]);
-          setItems([]);
-          return;
+            setUsers([]);
+            setItems([]);
+            return;
         }
-    
+
         setLoading(true);
         setError(null);
-    
-        try {
-          const [userResults, itemResults] = await Promise.all([
-            searchUsers(term.trim()),
-            searchItems(term.trim())
-          ]);
-    
-          setUsers(userResults);
-          setItems(itemResults);
-        } catch (error) {
-          setError('Search error.');
-          console.error('Search error: ', error);
-        } finally {
-          setLoading(false);
-        }
-      };
 
-      useEffect(() => {
+        try {
+            const [userResults, itemResults] = await Promise.all([
+                searchUsers(term.trim()),
+                searchItems(term.trim())
+            ]);
+
+            setUsers(userResults);
+            setItems(itemResults);
+        } catch (error) {
+            setError('Search error.');
+            console.error('Search error: ', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         performSearch(searchTerm);
-      }, [searchTerm]);
-    
-      const totalResults = users.length + items.length;
-      const hasResults = totalResults > 0;
-    
-      return {
+    }, [searchTerm]);
+
+
+    const searchResults = [...users, ...items];
+    const totalResults = users.length + items.length;
+    const hasResults = totalResults > 0;
+
+    return {
         users,
         items,
+        searchResults,
         totalResults,
         hasResults,
         
@@ -98,7 +107,7 @@ const useSearchResults = (searchTerm) => {
         error,
         
         performSearch
-      };
     };
-    
-    export default useSearchResults;
+};
+
+export default useSearchResults;

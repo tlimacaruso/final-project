@@ -6,22 +6,30 @@ const useSearch = () => {
     const [isSearching, setIsSearching] = useState(false);
     const navigate = useNavigate();
 
-    const performSearch = (term = searchTerm) => {
+    const performSearch = async (term = searchTerm) => {
         const cleanTerm = term.trim();
 
-        if (!cleanTerm) return;
+        if (!cleanTerm) {
+            setIsSearching(false);
+            return;
+        }
 
         setIsSearching(true);
-    }
-
-        const clearSearch = () => {
-            setSearchTerm('');
-          };
         
-          const handleSearchSubmit = (e) => {
-            e.preventDefault();
-            performSearch();
-          }
+        setTimeout(() => {
+            setIsSearching(false);
+        }, 1000);
+    };
+
+    const clearSearch = () => {
+        setSearchTerm('');
+        setIsSearching(false);
+    };
+    
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        performSearch();
+    };
 
     return {
         searchTerm,
@@ -31,7 +39,7 @@ const useSearch = () => {
         performSearch,
         clearSearch,
         handleSearchSubmit
-      };
     };
-    
-    export default useSearch;
+};
+
+export default useSearch;

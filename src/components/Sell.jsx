@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { collection, addDoc, serverTimestamp, getDoc, doc } from "firebase/firestore";
 import { db, auth } from "../firebaseConfig";
-import '../App.css';
 
 function Sell() {
     const [itemData, setItemData] = useState({
@@ -20,7 +19,9 @@ function Sell() {
     const [subCategory, setSubCategory] = useState('');
     const [secondSub, setSecondSub] = useState('');
     const [tempSelectedColor, setTempSelectedColor] = useState('');
-    const [selectedSizeCategory, setSelectedSizeCategory] = useState(''); 
+    const [selectedSizeCategory, setSelectedSizeCategory] = useState('');
+    const [secondSizeCat, setSecondSizeCat] = useState('');
+    const [specificSize, setSpecificSize] = useState('');
     const [isLoadingImages, setIsLoadingImages] = useState(false);
 
     const colors = [
@@ -39,9 +40,14 @@ function Sell() {
         'Unisex': ['Tops', 'Bottoms', 'Outerwear', 'Shoes', 'Accessories', 'Jewelry', 'Bags']
     };
 
-    const sizes = {
-        'Adults': ['XS', 'S', 'M', 'L', 'XL', 'XXL', '32', '34', '36', '38', '40', '42', '44', '36', '37', '38', '39', '40', '41', '42', '43', '44'],
-        'Children': ['0-3 months', '3-6 months', '6-9 months', '9-12 months', '12-18 months', '1 year', '2-3 years', '4-5 years', '6-7 years', '8-9 years', '10-11 years', '12-13 years', '14-15 years']
+    const sizeMenu = {
+        'Adults': {
+            'Clothing': ['XS', 'S', 'M', 'L', 'XL', 'XXL', '32', '34', '36', '38', '40', '42', '44'],
+            'Shoes': [ '36', '37', '38', '39', '40', '41', '42', '43', '44']},
+        
+        'Children': {
+            'Clothing' :['0-3 months', '3-6 months', '6-9 months', '9-12 months', '12-18 months', '1 year', '2-3 years', '4-5 years', '6-7 years', '8-9 years', '10-11 years', '12-13 years', '14-15 years'],
+            'Shoes': ['26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37']   }
     }
 
     const brandList = ['Zara', 'Mango', '& Other Stories', 'Puma', 'Bimba y Lola', 'Laagam', 'Nike', 'Adidas', 'H&M', 'Uniqlo', 'Pull & Bear', 'Abercrombie & Fitch',
@@ -130,7 +136,19 @@ function Sell() {
 
     const handleSizeCategoryChange = (e) => {
         setSelectedSizeCategory(e.target.value);
-        setItemData(prev => ({ ...prev, size: '' }));
+        setSecondSizeCat('');
+        setSpecificSize('');
+    };
+
+    const handleSecondSizeCatChange =(e) => {
+        setSecondSizeCat(e.target.value);
+        setSpecificSize('');
+    };
+
+    const handleSpecificSizeChange = (e) => {
+        setSpecificSize(e.target.value);
+        // Update the itemData.size with the selected size
+        setItemData(prev => ({ ...prev, size: e.target.value }));
     };
 
     const handleSubmit = async (e) => {
@@ -185,6 +203,8 @@ function Sell() {
             setSecondSub('');
             setTempSelectedColor('');
             setSelectedSizeCategory(''); 
+            setSecondSizeCat('');
+            setSpecificSize('');
 
         } catch (error) {
             console.error('Error adding piece:', error);
@@ -197,7 +217,10 @@ function Sell() {
         ? currentSubCategories[subCategory]
         : [];
 
-    const currentSizes = sizes[selectedSizeCategory] || []; 
+    const currentSecondSizeCats = sizeMenu[selectedSizeCategory];
+    const currentSpecificSizes = (selectedSizeCategory && secondSizeCat && currentSecondSizeCats && typeof currentSecondSizeCats === 'object' && !Array.isArray(currentSecondSizeCats))
+        ? currentSecondSizeCats[secondSizeCat]
+        : []; 
 
 
     return (
@@ -206,8 +229,8 @@ function Sell() {
             <p>Welcome to the selling page! Upload your clothing items describing them in a few easy steps!</p>
 
             <form onSubmit={handleSubmit}>
-                <div>
-                    <h3>What are you selling?</h3>
+            <div>
+            <h3>What are you selling?</h3>
                     <input type="text" name="name" placeholder="Item name" value={itemData.name} onChange={handleChange} required />
                 </div>
 
@@ -293,22 +316,14 @@ function Sell() {
                         Add colors
                     </button>
 
-                    <div style={{ marginTop: '10px' }}>
+                    <div>
                         {itemData.color.map((color) => (
-                            <span key={color} style={{
-                                backgroundColor: '#f0f0f0',
-                                border: '1px solid #ccc',
-                                padding: '5px 10px',
-                                margin: '0 5px 5px 0',
-                                borderRadius: '5px',
-                                display: 'inline-block',
-                                cursor: 'pointer'
-                            }} onClick={() => handleRemoveColor(color)}>
+                            <span key={color} onClick={() => handleRemoveColor(color)}>
                                 {color} &times;
                             </span>
                         ))}
                     </div>
-                    {itemData.color.length === 0 && <p style={{ color: 'red' }}>Add at least one color</p>}
+                    {itemData.color.length === 0 && <p>Add at least one color</p>}
                 </div>
 
                 <div>
@@ -317,22 +332,35 @@ function Sell() {
                         <label htmlFor='size'>Size Group</label>
                         <select id='size' value={selectedSizeCategory} onChange={handleSizeCategoryChange} required>
                             <option value=''>Adults or kids?</option>
-                            {Object.keys(sizes).map((size) => (
+                            {Object.keys(sizeMenu).map((size) => (
                                 <option key={size} value={size}>{size}</option>
                             ))}
                         </select>
-                        {selectedSizeCategory && (
-                            <div>
-                                <label htmlFor="specificSize">Size</label>
-                                <select id='specificSize' name='size' value={itemData.size} onChange={handleChange} required>
-                                    <option value=''>Select a size</option>
-                                    {currentSizes.map((size) => (
-                                        <option key={size} value={size}>{size}</option>
-                                    ))}
-                                </select>
-                            </div>
-                        )}
                     </div>
+
+                    {selectedSizeCategory && currentSecondSizeCats && (
+                        <div>
+                            <label htmlFor='secondSizeCat'>Clothes or shoes?</label>
+                            <select id='secondSizeCat' value={secondSizeCat} onChange={handleSecondSizeCatChange} required>
+                                <option value=''>Select:</option>
+                                {Object.keys(currentSecondSizeCats).map((secondsize) => (
+                                    <option key={secondsize} value={secondsize}>{secondsize}</option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
+
+                    {secondSizeCat && currentSpecificSizes.length > 0 && (
+                        <div>
+                            <label htmlFor='specificSize'>Size</label>
+                            <select id='specificSize' value={specificSize} onChange={handleSpecificSizeChange} required>
+                                <option value=''>Select a size:</option>
+                                {currentSpecificSizes.map((specific) => (
+                                    <option key={specific} value={specific}>{specific}</option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
                 </div>
 
                 <div>

@@ -5,9 +5,6 @@ import { useAuth } from './components/AuthContext';
 import { auth, db } from './firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import { Heart } from 'lucide-react';
-
-
 
 import Login from './components/Login';
 import Home from './components/Home';
@@ -20,8 +17,8 @@ import WishlistPage from './components/Wishlistpage';
 import Logo from '../public/img/reclotheslogo.png';
 import WishlistNavBar from './components/WishlistNavBar';
 import CheckoutPage from './components/CheckoutPage';
-import SearchBar from './components/SearchBar';
 import Footer from './components/Footer';
+import { SearchResultsPage, UsersResultsPage, ItemsResultsPage } from './components/SearchResultsPage';
 
 
 
@@ -38,6 +35,8 @@ function App() {
 
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
+
+/*   const { resetTimeout } = useAuthTimeout(currentUser, 60 * 60 * 1000); */
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -61,6 +60,12 @@ function App() {
     return () => unsubscribe();
   }, []);
 
+ /*  const handleRenewSession = () => {
+    resetTimeout();
+    console.log('Sessão renovada manualmente');
+  };
+
+ */
   const { currentUser } = useAuth();
 
 
@@ -89,7 +94,6 @@ function App() {
             )}
           </ul>
           <ul>
-            <li><SearchBar /></li>
             <li>
               {currentUser && (
                 <li><WishlistNavBar className='wishButton' /></li>
@@ -100,6 +104,9 @@ function App() {
         <main className='main-content'>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/search/:searchTerm" element={<SearchResultsPage />} />
+            <Route path="/search/:searchTerm/users" element={<UsersResultsPage />} />
+            <Route path="/search/:searchTerm/items" element={<ItemsResultsPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 

@@ -143,10 +143,11 @@ function Profile() {
                     bio: form.bio,
                     profilePicture: form.profilePicture,
                 })
-                setUserData({
+                setUserData(prevData => ({
+                    ...prevData,
                     ...form,
                     email: currentUser.email,
-                });
+                }));
                 setIsEditing(false);
                 alert('Profile updated successfully');
             } catch (error) {

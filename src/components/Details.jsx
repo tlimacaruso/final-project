@@ -144,15 +144,15 @@ function Details() {
                         <label>Images:
                             <input type="file" multiple onChange={handleImageUpload} />
                         </label>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '10px' }}>
+                        <div>
                             {form.images && form.images.map((imgId, idx) => (
-                                <div key={idx} style={{ position: 'relative', marginRight: '10px', marginBottom: '10px' }}>
-                                    <img
+                                <div key={idx}>
+                                    <img 
                                         src={`https://res.cloudinary.com/djlvpxr7a/image/upload/w_200,h_200,c_fill/${imgId}`}
                                         alt={`Preview ${idx}`}
                                         width='200'
                                     />
-                                    <button
+                                    <button class= 'details-remove'
                                         type="button"
                                         onClick={() => handleRemoveImage(imgId)}
                                         style={{

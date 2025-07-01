@@ -193,17 +193,17 @@ function Profile() {
 
             {isEditing ? (
                 <div className = 'editProfile'>
-                    <label>
+                    <label className='textName'>
                         Username:
                         <input type='text' name='displayName' value={form.displayName} onChange={handleChange} />
                     </label>
 
-                    <label>
+                    <label className='textName'>
                         Name:
                         <input type='text' name='name' value={form.name} onChange={handleChange} />
                     </label>
-                    <br />
-                    <label>
+            
+                    <label className='dob'>
                         Date of birth:
                         <input type='date' name='dateOfBirth' value={form.dateOfBirth} onChange={handleChange} />
                     </label>
@@ -231,15 +231,17 @@ function Profile() {
                     </label>
 
                     <br />
+                    <div className='editButtons'>
                     <button onClick={handleSave}>Save</button>
                     <button onClick={() => setIsEditing(false)}>Cancel</button>
+                    </div>
                 </div>
             ) : (
                 <div className='profileInfo'>
                     <div className='displayName'>
                     <p><strong>{userData.displayName || 'Undefined'}</strong></p>
                     </div>
-                    <div>
+                    <div className='profileDetails'>
                     <p>{userData.name}</p>
                     <p>{userData.bio}</p>
                     {/* <p><strong>Email:</strong>{userData.email}</p>
@@ -253,7 +255,7 @@ function Profile() {
             <h2 className='title-h2'>Closet</h2>
             {loadingItems
                 ? (
-                    <p>Loading closet...</p>
+                        <p>Loading closet...</p>
                 ) : (
                     <div className='displayItems'>
                         {userItems.length === 0 ? (
@@ -277,7 +279,7 @@ function Profile() {
                                         {loadingItems ? (
                                             <p>Loading sold items...</p>
                                         ) : (
-                                            <div className='items-grid'>
+                                            <div className='items-grid-sold'>
                                                 {soldItems.length === 0 ? (
                                                     <p>No items have been sold yet.</p>
                                                 ) : (

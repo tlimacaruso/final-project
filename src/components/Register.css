@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,27..175,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&display=swap');
+
+/* REMOVER ESTAS LINHAS PROBLEMÁTICAS:
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--lilas-claro);
+    background-position: center;
+    background-attachment: fixed;
+    min-height: fit-content;
+    color: var(--preto);
+    line-height: 1.6;
+}
+*/
+
+/* VARIÁVEIS CSS */
+:root {
+    /* Paleta de cores */
+    --lilas-claro: #e0aaff;
+    --lilas-medio: #a85de2;
+    --branco: #ffffff;
+    --preto: #000000;
+
+    /* Tipografia */
+    --font-principal: 'Roboto Flex', sans-serif;
+    --font-serifada: 'Playfair Display', serif;
+
+    /* Espaçamentos */
+    --espacamento-pequeno: 8px;
+    --espacamento-medio: 16px;
+    --espacamento-grande: 32px;
+    --espacamento-extra: 48px;
+
+    /* Sombras */
+    --sombra-leve: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --sombra-media: 0 4px 16px rgba(0, 0, 0, 0.15);
+    --sombra-forte: 0 6px 32px rgba(0, 0, 0, 0.355);
+}
+
+/* ESTILOS ESPECÍFICOS DO FORMULÁRIO DE REGISTRO */
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--espacamento-grande);
+}
+
+h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #000000;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+h5 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: var(--espacamento-grande);
+    color: #000000;
+}
+
+form > input,
+form > textarea,
+.password-field > input {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    font-family: var(--font-serifada);
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: var(--espacamento-medio);
+    padding: var(--espacamento-pequeno);
+    border: 3px solid black;
+}
+
+.password-field {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    width: 100%;
+}
+
+.password-field > input {
+    flex: 1;
+    margin-right: var(--espacamento-pequeno);
+}
+
+.regBtn,
+.toggle-password {
+    background-color: black;
+    color: white;
+    border: white solid 2px;
+    border-radius: 0;
+    padding: 12px 12px;
+    font-family: var(--font-serifada);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 1;
+    width: 200px;
+    margin: var(--espacamento-extra) auto 0;
+}
+
+.regBtn:hover,
+.toggle-passwordn:hover {
+    background-color: white;
+    border: black 2px solid;
+    color: black;
+}
+
+.toggle-password {
+    background: var(--preto);
+    color: var(--branco);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: var(--espacamento-medio);
+    margin-left: var(--espacamento-pequeno);
+    flex-shrink: 0;
+}

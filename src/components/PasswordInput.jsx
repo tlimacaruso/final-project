@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { validatePassword, getPasswordStrength } from  '../services/passwordValidation';
+import './Register.css';
 
 const PasswordInput = ({
     value,

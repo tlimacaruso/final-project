@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { auth } from '../firebaseConfig';
-import { useAuth } from './AuthContext';
-import { Heart } from 'lucide-react';
 import { getUserWishlist, addToWishlist, removeFromWishlist } from '../services/wishlistService';
 import '../App.css';
 
@@ -61,7 +59,7 @@ const WishlistButton = ({ itemId, itemOwnerId }) => {
     }
 
     return (
-        <button onClick={handleWishlistToggle}
+        <button className='heart-button-card' onClick={handleWishlistToggle}
             disabled={loading}
             style={{
                 backgroundColor: 'transparent',
@@ -69,7 +67,6 @@ const WishlistButton = ({ itemId, itemOwnerId }) => {
                 cursor: loading ? 'not-allowed' : 'pointer',
                 fontSize: '24px',
                 opacity: loading ? 0.5 : 1,
-                color: isWishlisted ? 'red' : 'gray',
             }}
             title={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}>
             {isWishlisted ? '♥︎' : '♡'}

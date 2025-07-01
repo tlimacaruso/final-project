@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,27..175,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* VARIÁVEIS CSS */
+:root {
+    /* Paleta de cores */
+    --lilas-claro: #e0aaff;
+    --lilas-medio: #a85de2;
+    --branco: #ffffff;
+    --preto: #000000;
+
+    /* Tipografia */
+    --font-principal: 'Roboto Flex', sans-serif;
+    --font-serifada: 'Playfair Display', serif;
+
+    /* Espaçamentos */
+    --espacamento-pequeno: 8px;
+    --espacamento-medio: 16px;
+    --espacamento-grande: 32px;
+    --espacamento-extra: 48px;
+
+    /* Sombras */
+    --sombra-leve: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --sombra-media: 0 4px 16px rgba(0, 0, 0, 0.15);
+    --sombra-forte: 0 6px 32px rgba(0, 0, 0, 0.355);
+}
+
+/* CONFIGURAÇÕES GERAIS */
+body {
+    background: var(--lilas-claro);
+    background-position: center;
+    background-attachment: fixed;
+    min-height: fit-content;
+    color: var(--preto);
+    line-height: 1.6;
+}
+
+.loginForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #000000;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+h5 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: var(--espacamento-grande);
+    color: #000000;
+}
+
+.loginInput>input {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    font-family: var(--font-serifada);
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: var(--espacamento-medio);
+    padding: var(--espacamento-pequeno);
+    border: 3px solid black;
+}
+
+.loginBtn{
+    background-color: black;
+  color: white;
+  border: white solid 2px;
+  border-radius: 0;
+  padding: 12px 12px;
+  font-family: var(--font-serifada);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 1;
+  width: 200px;
+  margin-top: var(--espacamento-extra);
+}
+
+.loginBtn:hover{
+    background-color: white;
+    border: black 2px solid;
+    color: black;
+}

@@ -131,12 +131,12 @@ const WishlistPage = () => {
 
     return (
         <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-            <h2 className= 'wishlist-page' style={{ textAlign: 'center', marginBottom: '30px' }}>
+            <h2 className='wishlist-page' style={{ textAlign: 'center', marginBottom: '30px' }}>
                 My Wishlist ({wishlistItems.length} items)
             </h2>
-            <div className = 'displayItems'>
+            <div className='displayItems'>
                 {wishlistItems.map(item => (
-                    <div key={item.id} className = 'item-card-container'>
+                    <div key={item.id} className='item-card-container-wish'>
 
                         <button
                             onClick={() => handleRemoveFromWishlist(item.id)}
@@ -160,9 +160,9 @@ const WishlistPage = () => {
                             ×
                         </button>
 
-                        <Link
+                        <Link className="item-card-link"
                             to={`/details/${item.id}`}
-                            style={{ textDecoration: 'none'}}
+                            style={{ textDecoration: 'none' }}
                         >
                             <img
                                 src={getImageUrl(item)}
@@ -177,40 +177,25 @@ const WishlistPage = () => {
                                     e.target.src = 'https://via.placeholder.com/200x200?text=No+Image';
                                 }}
                             />
+                            <div className="item-card-info">
+                                <h3>
+                                    {item.name || 'Unnamed Item'}
+                                </h3>
 
-                            <h3 style={{
-                                margin: '10px 0 5px 0',
-                                fontSize: '16px',
-                                color: '#333'
-                            }}>
-                                {item.name || 'Unnamed Item'}
-                            </h3>
+                                <p >
+                                    {item.description || 'No description'}
+                                </p>
 
-                            <p style={{
-                                color: '#666',
-                                fontSize: '14px',
-                                margin: '5px 0',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap'
-                            }}>
-                                {item.description || 'No description'}
-                            </p>
-
-                            <p style={{
-                                fontWeight: 'bold',
-                                color: '#007bff',
-                                fontSize: '16px',
-                                margin: '10px 0 5px 0'
-                            }}>
-                                €{item.price || '0'}
-                            </p>
+                                <p>
+                                    €{item.price || '0'}
+                                </p>
 
 
-                            <div style={{ fontSize: '12px', color: '#888' }}>
-                                {item.condition && <p>Condition: {item.condition}</p>}
-                                {item.brand && <p>Brand: {item.brand}</p>}
-                                {item.size && <p>Size: {item.size}</p>}
+                                <div>
+                                    {item.condition && <p>Condition: {item.condition}</p>}
+                                    {item.brand && <p>Brand: {item.brand}</p>}
+                                    {item.size && <p>Size: {item.size}</p>}
+                                </div>
                             </div>
                         </Link>
                     </div>
@@ -218,7 +203,7 @@ const WishlistPage = () => {
             </div>
 
             <div style={{ textAlign: 'center', marginTop: '30px' }}>
-                <Link className="optBtn">
+                <Link className="optBtn" Link to='/'>
                     Continue Shopping
                 </Link>
 

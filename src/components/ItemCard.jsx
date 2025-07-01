@@ -37,7 +37,7 @@ function ItemCard({ item, showSoldTag }) {
                             <p>Color: {item.color.join(', ')}</p>
                         )}
                         <p>Size: {item.size}</p>
-                        <p>Brand:{item.brand}</p>
+                        <p>Brand: {item.brand}</p>
                         
                         {item.userId && item.userName ? (
                             <p>Posted by: <Link to={`/profile/${item.userId}`}><strong>{item.userName}</strong></Link></p>

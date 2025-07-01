@@ -5,6 +5,8 @@ import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 import PasswordInput from './PasswordInput';
+import '../App.css';
+import './Register.css';
 
 function Register() {
     const navigate = useNavigate();
@@ -176,6 +178,7 @@ function Register() {
     return (
         <form onSubmit={handleRegister}>
             <h2 className="title-h2">Sign up</h2>
+            <h5>New here? Create an account.</h5>
             <input type='text' name='name' placeholder='Name' onChange={handleChange} required />
             <input type='text' name='displayName' placeholder='Username' onChange={handleChange} required />
             <input type='date' name='dateOfBirth' onChange={handleChange} required />
@@ -225,10 +228,9 @@ function Register() {
                 )}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
-            <button type='submit' disabled={isLoadingImage}>
+            <button className='regBtn' type='submit' disabled={isLoadingImage}>
                 {isLoadingImage ? 'Uploading...' : 'Sign up'}
             </button>
-
         </form>
     );
 }

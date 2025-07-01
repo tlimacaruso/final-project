@@ -52,13 +52,15 @@ body {
     text-align: center;
     margin-bottom: 10px;
     color: #000000;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
 }
 
 .sell-container > p {
     text-align: center;
     font-size: 1.1rem;
     font-family: var(--font-principal);
-    font-weight: 800;
+    font-weight: 600;
     color: #000000;
     margin-bottom: 50px;
     line-height: 1.5;
@@ -73,10 +75,13 @@ body {
 }
 
 .form-section {
-    background: var(--branco);
-    padding: 25px;
-    border: 3px solid black;
-}
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--espacamento-medio);
+    position: relative;
+    width: 100%;
+    max-width: 1440px;
+  }
 
 .form-section h3 {
     margin: 0 0 15px 0;
@@ -90,31 +95,44 @@ body {
     margin: 0 0 15px 0;
     color: #666;
     font-size: 0.9rem;
+    font-family: var(--font-principal);
     font-style: italic;
+    font-weight: 500;
 }
-
-/* Input Styles */
-.form-input,
-.form-select,
-.form-textarea {
+  
+  .form-section input,
+  .form-section select,
+  .form-section textarea {
+    position: relative;
     width: 100%;
-    padding: 12px;
-    border: 2px solid #ddd;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-}
-
-.form-input:focus,
-.form-select:focus,
-.form-textarea:focus {
+    padding: var(--espacamento-medio) var(--espacamento-grande);
+    border: 3px solid var(--preto);
+    font-size: 1.1rem;
+    font-family: var(--font-principal);
+    font-weight: 700;
+    background: var(--branco);
+    transition: all 0.3s ease;
+  }
+  
+  .form-section input:focus,
+  .form-section select:focus,
+  .form-section textarea:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-}
+    box-shadow: var(--sombra-leve);
+    transform: scale(1.02);
+  }
+  
+  .form-section input::placeholder,
+  .form-section textarea::placeholder {
+    color: var(--cinza-medio);
+    font-family: var(--font-principal);
+    font-weight: 500;
+  }
 
 .form-input[type="number"] {
     max-width: 200px;
 }
+
 
 .price-container {
     display: flex;
@@ -243,52 +261,39 @@ body {
     font-size: 0.9rem;
 }
 
-/* File Upload */
-.file-upload-section {
-    text-align: center;
-}
-
-.file-input {
-    width: 100%;
-    padding: 15px;
-    border: 2px dashed #007bff;
-    border-radius: 10px;
-    background-color: #f8f9fa;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.file-input:hover {
-    background-color: #e9ecef;
-}
 
 .upload-status {
     margin-top: 10px;
     font-weight: 600;
-    color: #007bff;
 }
 
-/* Submit Button */
+
 .submit-btn {
-    padding: 15px 30px;
-    background-color: #007bff;
+    display: flex;
+    justify-content: center;
+}
+
+.submit-btn button {
+    background-color: black;
     color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    font-weight: 600;
+    border: white solid 2px;
+    border-radius: 0;
+    padding: 12px 24px;
+    font-family: var(--font-serifada);
+    font-size: 20px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 20px;
-    align-self: center;
+    transition: all 0.3s ease;
+    opacity: 1;
 }
 
-.submit-btn:hover:not(:disabled) {
-    background-color: #0056b3;
+.submit-btn button:hover:not(:disabled) {
+    background-color: white;
+    border: black 2px solid;
+    color: black;
 }
 
-.submit-btn:disabled {
-    background-color: #6c757d;
+.submit-btn button:disabled {
+    opacity: 0.5;
     cursor: not-allowed;
 }
 

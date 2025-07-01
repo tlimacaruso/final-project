@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { collection, addDoc, serverTimestamp, getDoc, doc } from "firebase/firestore";
 import { db, auth } from "../firebaseConfig";
+import '../App.css';
+import './Sell.css';
 
 function Sell() {
     const [itemData, setItemData] = useState({
@@ -224,27 +226,29 @@ function Sell() {
 
 
     return (
-        <div>
+        <div className="sell-container">
             <div className="title-h2">Upload item</div>
-            <p>Welcome to the selling page! Upload your clothing items describing them in a few easy steps!</p>
+            <p>Welcome to the selling page! Upload your clothing items in a few easy steps!</p>
 
-            <form onSubmit={handleSubmit}>
-            <div>
+            <form className="sell-form" onSubmit={handleSubmit}>
+            <div className="form-section">
             <h3>What are you selling?</h3>
                     <input type="text" name="name" placeholder="Item name" value={itemData.name} onChange={handleChange} required />
                 </div>
 
-                <div>
+                <div className="form-section">
                     <h3>Now describe your item:</h3>
                     <input type="text" name="description" placeholder="Description" value={itemData.description} onChange={handleChange} required />
                 </div>
 
-                <div>
+                <div className="form-section">
                     <h3>How much is it?</h3>
-                    <input type="number" name="price" placeholder="Price" value={itemData.price} onChange={handleChange} required /> €
+                    <div className="price-container">
+                    <input type="number" name="price" placeholder="Price" value={itemData.price} onChange={handleChange} required /> <span>€</span>
+                    </div>
                 </div>
 
-                <div>
+                <div className="form-section">
                     <h3>Is it in good condition?</h3>
                     <p>Please include pictures of any imperfections or usage marks</p>
                     <select name='condition' value={itemData.condition} onChange={handleChange} required>
@@ -257,7 +261,7 @@ function Sell() {
                     </select>
                 </div>
 
-                <div>
+                <div className="form-section">
                     <h3>What type of item is it?</h3>
                     <div>
                         <label htmlFor='mainCategory'>Main Type</label>
@@ -299,7 +303,7 @@ function Sell() {
                     )}
                 </div>
 
-                <div>
+                <div className="form-section">
                     <h3>Color or predominant color:</h3>
                     <p>Choose up to 3</p>
                     <select
@@ -316,7 +320,7 @@ function Sell() {
                         Add colors
                     </button>
 
-                    <div>
+                    <div className="form-section">
                         {itemData.color.map((color) => (
                             <span key={color} onClick={() => handleRemoveColor(color)}>
                                 {color} &times;
@@ -326,7 +330,7 @@ function Sell() {
                     {itemData.color.length === 0 && <p>Add at least one color</p>}
                 </div>
 
-                <div>
+                <div className="form-section">
                     <h3>Size</h3>
                     <div>
                         <label htmlFor='size'>Size Group</label>
@@ -363,7 +367,7 @@ function Sell() {
                     )}
                 </div>
 
-                <div>
+                <div className="form-section">
                     <h3>What brand?</h3>
                     <select name='brand' value={itemData.brand} onChange={handleChange} required>
                         <option value=''>Select a brand</option>
@@ -373,16 +377,17 @@ function Sell() {
                     </select>
                 </div>
 
-                <div>
+                <div className="form-section">
                     <h3>Let's see that beauty!</h3>
-                    <p>Show us pictures of the item, so people can see what does it look like and how it fits 😊</p>
+                    <p>Show us pictures of the item, so people can see what does it look like and how it fits</p>
                     <input type='file' accept="image/*" multiple onChange={handleImageUpload} />
                     {isLoadingImages && <p>Uploading images...</p>}
                 </div>
-
+                <div className="submit-btn">
                 <button type='submit' disabled={isLoadingImages || itemData.images.length === 0}>
                     {isLoadingImages ? 'Uploading...' : 'Upload Item'}
                 </button>
+                </div>
             </form>
         </div>
     );

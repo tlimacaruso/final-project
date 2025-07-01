@@ -74,10 +74,12 @@ function App() {
     <Router>
       <div className="NavBar">
         <nav>
-          <Link to='/' className='navbar-logo'>
+          <div className='navbar-logo'>
+          <Link to='/'>
             <img src={Logo} alt='Logo' style={{ height: '100px' }} />
           </Link>
-          <ul>
+          </div>
+          <ul className='nav-links'>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/sell">Sell</Link></li>
 
@@ -93,10 +95,10 @@ function App() {
               </>
             )}
           </ul>
-          <ul>
+          <ul className='wishButton'>
             <li>
               {currentUser && (
-                <li><WishlistNavBar className='wishButton' /></li>
+                <li><WishlistNavBar/></li>
               )}
             </li>
           </ul>

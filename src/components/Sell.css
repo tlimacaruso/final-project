@@ -1,0 +1,345 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,27..175,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* VARIÁVEIS CSS */
+:root {
+  /* Paleta de cores */
+  --lilas-claro: #e0aaff;
+  --lilas-medio: #a85de2;
+  --branco: #ffffff;
+  --preto: #000000;
+
+  /* Tipografia */
+  --font-principal: 'Roboto Flex', sans-serif;
+  --font-serifada: 'Playfair Display', serif;
+
+  /* Espaçamentos */
+  --espacamento-pequeno: 8px;
+  --espacamento-medio: 16px;
+  --espacamento-grande: 32px;
+  --espacamento-extra: 48px;
+
+  /* Sombras */
+  --sombra-leve: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --sombra-media: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --sombra-forte: 0 6px 32px rgba(0, 0, 0, 0.355);
+}
+
+/* CONFIGURAÇÕES GERAIS */
+body {
+  background: var(--lilas-claro);
+  background-position: center;
+  background-attachment: fixed;
+  min-height: fit-content;
+  color: var(--preto);
+  line-height: 1.6;
+}
+.sell-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.title-h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #000000;
+}
+
+.sell-container > p {
+    text-align: center;
+    font-size: 1.1rem;
+    font-family: var(--font-principal);
+    font-weight: 800;
+    color: #000000;
+    margin-bottom: 50px;
+    line-height: 1.5;
+    margin-top: 20px;
+}
+
+/* Form Styles */
+.sell-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.form-section {
+    background: var(--branco);
+    padding: 25px;
+    border: 3px solid black;
+}
+
+.form-section h3 {
+    margin: 0 0 15px 0;
+    font-family: var(--font-serifada);
+    font-size: 1.3rem;
+    color: #333;
+    font-weight: 700;
+}
+
+.form-section p {
+    margin: 0 0 15px 0;
+    color: #666;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+/* Input Styles */
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.form-input[type="number"] {
+    max-width: 200px;
+}
+
+.price-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.price-container .form-input {
+    max-width: 150px;
+}
+
+.price-container span {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+/* Category Selection */
+.category-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.category-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.category-item label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+/* Color Selection */
+.color-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.color-input-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.color-input-group .form-select {
+    flex: 1;
+    max-width: 300px;
+}
+
+.add-color-btn {
+    padding: 12px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.add-color-btn:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+.add-color-btn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+.selected-colors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.color-tag {
+    background-color: #007bff;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.color-tag:hover {
+    background-color: #0056b3;
+}
+
+.color-tag .remove-icon {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.color-warning {
+    color: #dc3545;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+/* Size Selection */
+.size-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.size-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.size-item label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+/* File Upload */
+.file-upload-section {
+    text-align: center;
+}
+
+.file-input {
+    width: 100%;
+    padding: 15px;
+    border: 2px dashed #007bff;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.file-input:hover {
+    background-color: #e9ecef;
+}
+
+.upload-status {
+    margin-top: 10px;
+    font-weight: 600;
+    color: #007bff;
+}
+
+/* Submit Button */
+.submit-btn {
+    padding: 15px 30px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    align-self: center;
+}
+
+.submit-btn:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.submit-btn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sell-container {
+        padding: 15px;
+    }
+    
+    .title-h2 {
+        font-size: 2rem;
+    }
+    
+    .form-section {
+        padding: 20px;
+    }
+    
+    .color-input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .color-input-group .form-select {
+        max-width: none;
+    }
+    
+    .price-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .price-container .form-input {
+        max-width: none;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .sell-container {
+        padding: 10px;
+    }
+    
+    .title-h2 {
+        font-size: 1.8rem;
+    }
+    
+    .form-section {
+        padding: 15px;
+    }
+    
+    .selected-colors {
+        justify-content: center;
+    }
+}

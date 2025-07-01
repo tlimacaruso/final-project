@@ -3,7 +3,7 @@ import { auth } from '../firebaseConfig';
 import { useAuth } from './AuthContext';
 import { Heart } from 'lucide-react';
 import { getUserWishlist, addToWishlist, removeFromWishlist } from '../services/wishlistService';
-
+import '../App.css';
 
 const WishlistButton = ({ itemId, itemOwnerId }) => {
     const [isWishlisted, setIsWishlisted] = useState(false);

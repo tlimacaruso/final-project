@@ -2,7 +2,8 @@ import React, {useState, useEffect} from "react";
 import {db} from "../firebaseConfig";
 import {collection, getDocs} from 'firebase/firestore';
 import ItemCard from "./ItemCard";
-import SearchBar from "./SearchBar"; // Assumindo que está no mesmo diretório
+import SearchBar from "./SearchBar";
+import '../App.css';
 
 function Home(){
     const [allItems, setAllItems] = useState([]); // Todos os items
@@ -69,7 +70,7 @@ function Home(){
 
     return(
         <div>
-            <h1>Home</h1>
+            <h1 className="pageTitle">Home</h1>
             
             {/* SearchBar integrada */}
             <SearchBar onSearch={handleSearch} />
@@ -86,7 +87,7 @@ function Home(){
                 </div>
             )}
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center' }}>
+            <div className = 'displayItems'>
                 {displayedItems.map(item=>(
                     <ItemCard key={item.id} item={item}/>
                 ))}

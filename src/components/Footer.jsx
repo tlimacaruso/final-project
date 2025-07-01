@@ -5,16 +5,14 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section">
-          <h4>Help</h4>
           <ul>
-            <li><a href="/faq">FAQ</a></li>
-            <li><a href="/suporte">Support</a></li>
-            <li><a href="/termos">Terms&Conditions</a></li>
+            <li><a href="/faq"><strong>FAQ</strong></a></li>
+            <li><a href="/suporte"><strong>Support</strong></a></li>
+            <li><a href="/termos"><strong>Terms&Conditions</strong></a></li>
           </ul>
         </div>
         
         <div className="footer-section">
-          <h4>Contact</h4>
           <ul>
             <li>Email: suporte@reclothes.com</li>
             <li>Phone: +351 213 456 789</li>

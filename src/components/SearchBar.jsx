@@ -2,6 +2,7 @@ import React, {useEffect} from "react";
 import { Search, X } from "lucide-react";
 import useSearch from "./hooks/useSearch";
 import useSearchResults from "./hooks/useSearchResults";
+import '../App.css';
 
 function SearchBar({ onSearch, showResults = false }) {
     const { 

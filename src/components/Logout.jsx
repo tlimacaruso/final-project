@@ -12,5 +12,5 @@ import { signOut } from 'firebase/auth';
         navigate('/');
       });
     };
-    return (<button onClick={handleLogout}>Logout</button>);
+    return (<button className= 'logoutBtn' onClick={handleLogout}>Logout</button>);
   }

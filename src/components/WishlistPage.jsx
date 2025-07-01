@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { db, auth } from '../firebaseConfig';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { Link } from "react-router-dom";
+import '../App.css';
 
 const WishlistPage = () => {
     const [wishlistItems, setWishlistItems] = useState([]);
@@ -130,28 +131,12 @@ const WishlistPage = () => {
 
     return (
         <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-            <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>
+            <h2 className= 'wishlist-page' style={{ textAlign: 'center', marginBottom: '30px' }}>
                 My Wishlist ({wishlistItems.length} items)
             </h2>
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-                gap: '20px',
-                padding: '20px 0'
-            }}>
+            <div className = 'displayItems'>
                 {wishlistItems.map(item => (
-                    <div key={item.id}
-                        style={{
-                            border: '1px solid #ddd',
-                            borderRadius: '8px',
-                            padding: '15px',
-                            backgroundColor: '#fff',
-                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                            transition: 'transform 0.2s ease',
-                            position: 'relative'
-                        }}
-                        onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
-                        onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}>
+                    <div key={item.id} className = 'item-card-container'>
 
                         <button
                             onClick={() => handleRemoveFromWishlist(item.id)}
@@ -159,14 +144,14 @@ const WishlistPage = () => {
                                 position: 'absolute',
                                 top: '10px',
                                 right: '10px',
-                                background: '#ff4757',
+                                background: '#000000',
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: '50%',
-                                width: '25px',
-                                height: '25px',
+                                width: '35px',
+                                height: '35px',
                                 cursor: 'pointer',
-                                fontSize: '14px',
+                                fontSize: '20px',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center'
@@ -177,16 +162,15 @@ const WishlistPage = () => {
 
                         <Link
                             to={`/details/${item.id}`}
-                            style={{ textDecoration: 'none', color: 'inherit' }}
+                            style={{ textDecoration: 'none'}}
                         >
                             <img
                                 src={getImageUrl(item)}
                                 alt={item.name || 'Item image'}
                                 style={{
                                     width: '100%',
-                                    height: '200px',
+                                    height: '300px',
                                     objectFit: 'cover',
-                                    borderRadius: '4px',
                                     marginBottom: '10px'
                                 }}
                                 onError={(e) => {
@@ -234,17 +218,7 @@ const WishlistPage = () => {
             </div>
 
             <div style={{ textAlign: 'center', marginTop: '30px' }}>
-                <Link
-                    to="/"
-                    style={{
-                        display: 'inline-block',
-                        padding: '12px 24px',
-                        backgroundColor: '#007bff',
-                        color: 'white',
-                        textDecoration: 'none',
-                        borderRadius: '6px',
-                        fontSize: '16px'
-                    }}>
+                <Link className="optBtn">
                     Continue Shopping
                 </Link>
 

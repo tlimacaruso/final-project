@@ -3,8 +3,8 @@ import { auth, db } from '../firebaseConfig';
 import { doc, getDoc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { useNavigate, useParams } from 'react-router-dom';
 import { updateProfile } from 'firebase/auth';
-import { Link } from 'react-router-dom';
 import ItemCard from './ItemCard';
+import '../App.css';
 
 function Profile() {
     const [userData, setUserData] = useState(null);
@@ -168,18 +168,18 @@ function Profile() {
         <div>
             <h2 className="title-h2">Profile</h2>
 
-            <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-                <img src={userData.profilePicture || 'https://via.placeholder.com/100'}
+            <div className='profilePicture'>
+                <img className='profilePic' src={userData.profilePicture || 'https://via.placeholder.com/100'}
                     alt='Profile picture'
                     style={{
                         borderRadius: '50%',
-                        width: '100px',
-                        height: '100px',
+                        width: '200px',
+                        height: '200px',
                         objectFit: 'cover'
                     }}
                 />
                 {isEditing && (
-                    <div style={{ marginTop: '10px' }}>
+                    <div>
                         <input
                             type='file'
                             accept='image/*'
@@ -192,7 +192,7 @@ function Profile() {
             </div>
 
             {isEditing ? (
-                <div>
+                <div className = 'editProfile'>
                     <label>
                         Username:
                         <input type='text' name='displayName' value={form.displayName} onChange={handleChange} />
@@ -235,14 +235,18 @@ function Profile() {
                     <button onClick={() => setIsEditing(false)}>Cancel</button>
                 </div>
             ) : (
-                <div>
+                <div className='profileInfo'>
+                    <div className='displayName'>
                     <p><strong>{userData.displayName || 'Undefined'}</strong></p>
+                    </div>
+                    <div>
                     <p>{userData.name}</p>
                     <p>{userData.bio}</p>
                     {/* <p><strong>Email:</strong>{userData.email}</p>
                     <p><strong>Date of birth:</strong>{userData.dateOfBirth}</p> */}
                     {(!profileUserId || profileUserId === auth.currentUser?.uid) && (
                         <button onClick={() => setIsEditing(true)}>Edit profile</button>)}
+                        </div>
                 </div>
             )}
 
@@ -251,7 +255,7 @@ function Profile() {
                 ? (
                     <p>Loading closet...</p>
                 ) : (
-                    <div className='items-grid'>
+                    <div className='displayItems'>
                         {userItems.length === 0 ? (
                             <p>Your closet is empty 🙃</p>
                         ) : (

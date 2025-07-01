@@ -1,24 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import WishlistButton from "./WishlistButton";
-import { Heart } from "lucide-react";
+import '../App.css';
 
 function ItemCard({ item, showSoldTag }) {
-
-    /* const [items, setItems] = useState([]);
-
-    useEffect(() => {
-        const fetchItems = async () => {
-            const querySnapshot =await getDocs(collection(db, 'items'));
-            const data = querySnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }))
-            setItems(data);
-        };
-
-        fetchItems();
-    }, []);  */
 
     if (!item) {
         return null;

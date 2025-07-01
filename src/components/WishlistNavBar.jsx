@@ -3,7 +3,7 @@ import { Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { auth } from '../firebaseConfig';
 import { getUserWishlist } from '../services/wishlistService';
-
+import '../App.css';
 
 export function useWishlistCount() {
     const [wishlistCount, setWishlistCount] = useState(0);
@@ -62,7 +62,7 @@ function WishlistNavBar() {
             <Heart className='heart-icon' />
             <span>Wishlist</span>
             {wishlistCount > 0 && (
-                <span className='wishlist-counter'>{wishlistCount}</span>
+                <span className='wishlist-counter'> { wishlistCount } </span>
             )}
         </Link>
     );
